@@ -29,7 +29,7 @@ type ChapterTileProps = {
 }
 
 enum BACKGROUND_COLOR {
-  READ = '#7b7b7b',
+  READ = '#4b4b4b',
   UNREAD = '#9a9a9a',
 }
 
@@ -40,7 +40,7 @@ const HOVER_SIZE = '52px';
 export const BaseTile: FC<BaseTileProps> = ({ label, style }) => {
   const [isHover, setIsHover] = useState<boolean>(false);
 
-  const handleMouseEnter = () => setIsHover(true);
+  const handleMouseEnter = () => setIsHover(false); // change this to true after getting things figured out
   const handleMouseLeave = () => setIsHover(false);
 
 
@@ -68,9 +68,7 @@ export const BookTile: FC<BookTileProps> = ({ book, bookId }) => {
   const generateBookTileStyle = (readPercentage: number): CSSProperties => {
     return {
       cursor: 'pointer',
-      background: `linear-gradient(90deg, ${BACKGROUND_COLOR.UNREAD} ${
-        100 - readPercentage
-        }%, ${BACKGROUND_COLOR.READ} ${readPercentage}%)`,
+      background: `linear-gradient(90deg, ${BACKGROUND_COLOR.READ} ${readPercentage}%, ${BACKGROUND_COLOR.UNREAD} ${readPercentage}%)`,
     };
   };
   return (

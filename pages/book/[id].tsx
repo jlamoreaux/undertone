@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
 import GridLayout from '../../components/Grid';
-import { ChapterTile, Book } from '../../components/Tile';
-import { useBook } from '../../hooks/useBooks';
+import { ChapterTile } from '../../components/Tile';
+import { SingleBookResponse, useBook } from '../../hooks/useBooks';
+import { getStickyValue } from '../../hooks/useStickyState';
 
 export const ErrorMessage = () => <div>Uh oh! Something went wrong!</div>
 export const LoadingMessage = () => <div>Loading...</div>
@@ -14,9 +14,10 @@ const BookPage = () => {
   const { data, isError, isLoading } = useBook(id as string);
 
   if (isLoading ) return <LoadingMessage /> 
-  if (isError) return <ErrorMessage />
+  if (isError || !data) return <ErrorMessage />
 
-  const { chapters, chaptersRead } = data;
+  console.log(data);
+  const { name, chapters, chaptersRead } = data;
   let chapterTiles = [];
   for (let i = 1; i <= chapters; i++) {
     chapterTiles.push(<ChapterTile chapter={i} isRead={chaptersRead?.includes(i) || false} key={i} />)

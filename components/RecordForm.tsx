@@ -5,6 +5,7 @@ import { useAllBooks } from '../hooks/useBooks';
 import { ErrorMessage, LoadingMessage } from '../pages/book/[id]';
 import { Book } from './Tile';
 import { ReadingForm } from '../pages';
+import { getStickyValue } from '../hooks/useStickyState';
 
 type RecordFormProps = {
   initialValues?: any
@@ -48,10 +49,16 @@ const RecordForm = ({ initialValues, handleSubmit }: RecordFormProps) => {
   
   const getBookChapters = (book: Book | undefined) => {
     const numChapters = book?.chapters;
-    let chapters: { value: string, label: string }[] = [];
+    const readingRecord = getStickyValue('readingRecord');
+    const readChapters = book && readingRecord && readingRecord[book?.name];
+    let chapters: { value: string, label: string, group: string }[] = [];
     if (numChapters) {
       for (let i = 1; i <= numChapters; i++) {
-        chapters.push({ value: i.toString(), label: i.toString() });
+        let group = "Chapters";
+        if (readChapters && readChapters.includes(i)) {
+          group = "Previously Read Chapters"
+        }
+        chapters.push({ value: i.toString(), label: i.toString(), group });
       }
     }
     return chapters
@@ -75,6 +82,7 @@ const RecordForm = ({ initialValues, handleSubmit }: RecordFormProps) => {
           placeholder={
             selectedBook ? 'Chapters' : 'Chapters -- Select a book first'
           }
+          searchable
           {...form.getInputProps('chapters')}
           onChange={handleChapterChange}
           value={chapters}
