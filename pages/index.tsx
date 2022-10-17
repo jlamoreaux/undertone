@@ -56,7 +56,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <header>
-        <h1 className={styles.title}>Undertone</h1>
+        <h1 className={styles.title}>Undrtone</h1>
       </header>
       <main className={styles.main}>
         <section>
