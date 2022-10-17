@@ -1,0 +1,596 @@
+[
+  {
+    "name": "Genesis",
+    "metadata": {
+      "bookType": "pentateuch",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/1"
+    },
+    "chapters": 50,
+    "shortName": "Ge"
+  },
+  {
+    "name": "Exodus",
+    "metadata": {
+      "bookType": "pentateuch",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/2"
+    },
+    "chapters": 40,
+    "shortName": "Ex"
+  },
+  {
+    "name": "Leviticus",
+    "metadata": {
+      "bookType": "pentateuch",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/3"
+    },
+    "chapters": 27,
+    "shortName": "Le"
+  },
+  {
+    "name": "Numbers",
+    "metadata": {
+      "bookType": "pentateuch",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/4"
+    },
+    "chapters": 36,
+    "shortName": "Nu"
+  },
+  {
+    "name": "Deuteronomy",
+    "metadata": {
+      "bookType": "pentateuch",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/5"
+    },
+    "chapters": 34,
+    "shortName": "De"
+  },
+  {
+    "name": "Joshua",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/6"
+    },
+    "chapters": 24,
+    "shortName": "Jos"
+  },
+  {
+    "name": "Judges",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/7"
+    },
+    "chapters": 21,
+    "shortName": "Jg"
+  },
+  {
+    "name": "Ruth",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/8"
+    },
+    "chapters": 4,
+    "shortName": "Ru"
+  },
+  {
+    "name": "1 Samuel",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/9"
+    },
+    "chapters": 31,
+    "shortName": "1Sa"
+  },
+  {
+    "name": "2 Samuel",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/10"
+    },
+    "chapters": 24,
+    "shortName": "2Sa"
+  },
+  {
+    "name": "1 Kings",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/11"
+    },
+    "chapters": 22,
+    "shortName": "1Ki"
+  },
+  {
+    "name": "2 Kings",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/12"
+    },
+    "chapters": 25,
+    "shortName": "2Ki"
+  },
+  {
+    "name": "1 Chronicles",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/13"
+    },
+    "chapters": 29,
+    "shortName": "1Ch"
+  },
+  {
+    "name": "2 Chronicles",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/14"
+    },
+    "chapters": 36,
+    "shortName": "2Ch"
+  },
+  {
+    "name": "Ezra",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/15"
+    },
+    "chapters": 10,
+    "shortName": "Ez"
+  },
+  {
+    "name": "Nehemiah",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/16"
+    },
+    "chapters": 13,
+    "shortName": "Ne"
+  },
+  {
+    "name": "Esther",
+    "metadata": {
+      "bookType": "historical",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/17"
+    },
+    "chapters": 10,
+    "shortName": "Es"
+  },
+  {
+    "name": "Job",
+    "metadata": {
+      "bookType": "poetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/18"
+    },
+    "chapters": 42,
+    "shortName": "Job"
+  },
+  {
+    "name": "Psalms",
+    "metadata": {
+      "bookType": "poetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/19"
+    },
+    "chapters": 150,
+    "shortName": "Ps"
+  },
+  {
+    "name": "Proverbs",
+    "metadata": {
+      "bookType": "poetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/20"
+    },
+    "chapters": 31,
+    "shortName": "Pr"
+  },
+  {
+    "name": "Ecclesiastes",
+    "metadata": {
+      "bookType": "poetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/21"
+    },
+    "chapters": 12,
+    "shortName": "Ec"
+  },
+  {
+    "name": "Song of Solomon",
+    "metadata": {
+      "bookType": "poetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/22"
+    },
+    "chapters": 8,
+    "shortName": "Ca"
+  },
+  {
+    "name": "Isaiah",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/23"
+    },
+    "chapters": 66,
+    "shortName": "Isa"
+  },
+  {
+    "name": "Jeremiah",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/24"
+    },
+    "chapters": 52,
+    "shortName": "Jer"
+  },
+  {
+    "name": "Lamentations",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/25"
+    },
+    "chapters": 5,
+    "shortName": "La"
+  },
+  {
+    "name": "Ezekiel",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/26"
+    },
+    "chapters": 48,
+    "shortName": "Eze"
+  },
+  {
+    "name": "Daniel",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/27"
+    },
+    "chapters": 12,
+    "shortName": "Da"
+  },
+  {
+    "name": "Hosea",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/28"
+    },
+    "chapters": 14,
+    "shortName": "Ho"
+  },
+  {
+    "name": "Joel",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/29"
+    },
+    "chapters": 3,
+    "shortName": "Joe"
+  },
+  {
+    "name": "Amos",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/30"
+    },
+    "chapters": 9,
+    "shortName": "Am"
+  },
+  {
+    "name": "Obadiah",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/31"
+    },
+    "chapters": 1,
+    "shortName": "Ob"
+  },
+  {
+    "name": "Jonah",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/32"
+    },
+    "chapters": 4,
+    "shortName": "Jon"
+  },
+  {
+    "name": "Micah",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/33"
+    },
+    "chapters": 7,
+    "shortName": "Mic"
+  },
+  {
+    "name": "Nahum",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/34"
+    },
+    "chapters": 3,
+    "shortName": "Na"
+  },
+  {
+    "name": "Habakkuk",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/35"
+    },
+    "chapters": 3,
+    "shortName": "Hab"
+  },
+  {
+    "name": "Zephaniah",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/36"
+    },
+    "chapters": 3,
+    "shortName": "Zep"
+  },
+  {
+    "name": "Haggai",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/37"
+    },
+    "chapters": 2,
+    "shortName": "Hag"
+  },
+  {
+    "name": "Zechariah",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/38"
+    },
+    "chapters": 14,
+    "shortName": "Zec"
+  },
+  {
+    "name": "Malachi",
+    "metadata": {
+      "bookType": "prophetic",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/39"
+    },
+    "chapters": 4,
+    "shortName": "Mal"
+  },
+  {
+    "name": "Matthew",
+    "metadata": {
+      "bookType": "gospels",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/40"
+    },
+    "chapters": 28,
+    "shortName": "Mt"
+  },
+  {
+    "name": "Mark",
+    "metadata": {
+      "bookType": "gospels",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/41"
+    },
+    "chapters": 16,
+    "shortName": "Mr"
+  },
+  {
+    "name": "Luke",
+    "metadata": {
+      "bookType": "gospels",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/42"
+    },
+    "chapters": 24,
+    "shortName": "Lu"
+  },
+  {
+    "name": "John",
+    "metadata": {
+      "bookType": "gospels",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/43"
+    },
+    "chapters": 21,
+    "shortName": "Joh"
+  },
+  {
+    "name": "Acts",
+    "metadata": {
+      "bookType": "acts",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/44"
+    },
+    "chapters": 28,
+    "shortName": "Ac"
+  },
+  {
+    "name": "Romans",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/45"
+    },
+    "chapters": 16,
+    "shortName": "Ro"
+  },
+  {
+    "name": "1 Corinthians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/46"
+    },
+    "chapters": 16,
+    "shortName": "1Co"
+  },
+  {
+    "name": "2 Corinthians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/47"
+    },
+    "chapters": 13,
+    "shortName": "2Co"
+  },
+  {
+    "name": "Galatians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/48"
+    },
+    "chapters": 6,
+    "shortName": "Ga"
+  },
+  {
+    "name": "Ephesians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/49"
+    },
+    "chapters": 6,
+    "shortName": "Eph"
+  },
+  {
+    "name": "Philippians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/50"
+    },
+    "chapters": 4,
+    "shortName": "Php"
+  },
+  {
+    "name": "Colossians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/51"
+    },
+    "chapters": 4,
+    "shortName": "Col"
+  },
+  {
+    "name": "1 Thessalonians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/52"
+    },
+    "chapters": 5,
+    "shortName": "1Th"
+  },
+  {
+    "name": "2 Thessalonians",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/53"
+    },
+    "chapters": 3,
+    "shortName": "2Th"
+  },
+  {
+    "name": "1 Timothy",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/54"
+    },
+    "chapters": 6,
+    "shortName": "1Ti"
+  },
+  {
+    "name": "2 Timothy",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/55"
+    },
+    "chapters": 4,
+    "shortName": "2Ti"
+  },
+  {
+    "name": "Titus",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/56"
+    },
+    "chapters": 3,
+    "shortName": "Tit"
+  },
+  {
+    "name": "Philemon",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/57"
+    },
+    "chapters": 1,
+    "shortName": "Phm"
+  },
+  {
+    "name": "Hebrews",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/58"
+    },
+    "chapters": 13,
+    "shortName": "Heb"
+  },
+  {
+    "name": "James",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/59"
+    },
+    "chapters": 5,
+    "shortName": "Jas"
+  },
+  {
+    "name": "1 Peter",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/60"
+    },
+    "chapters": 5,
+    "shortName": "1Pe"
+  },
+  {
+    "name": "2 Peter",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/61"
+    },
+    "chapters": 3,
+    "shortName": "2Pe"
+  },
+  {
+    "name": "1 John",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/62"
+    },
+    "chapters": 5,
+    "shortName": "1Jo"
+  },
+  {
+    "name": "2 John",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/63"
+    },
+    "chapters": 1,
+    "shortName": "2Jo"
+  },
+  {
+    "name": "3 John",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/64"
+    },
+    "chapters": 1,
+    "shortName": "3Jo"
+  },
+  {
+    "name": "Jude",
+    "metadata": {
+      "bookType": "letters",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/65"
+    },
+    "chapters": 1,
+    "shortName": "Jude"
+  },
+  {
+    "name": "Revelation",
+    "metadata": {
+      "bookType": "revelation",
+      "jwLink": "https://wol.jw.org/en/wol/binav/r1/lp-e/nwtsty/66"
+    },
+    "chapters": 22,
+    "shortName": "Re"
+  }
+]
