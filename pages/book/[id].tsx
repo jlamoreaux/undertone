@@ -16,7 +16,6 @@ const BookPage = () => {
   if (isLoading ) return <LoadingMessage /> 
   if (isError || !data) return <ErrorMessage />
 
-  console.log(data);
   const { name, chapters, chaptersRead } = data;
   let chapterTiles = [];
   for (let i = 1; i <= chapters; i++) {
