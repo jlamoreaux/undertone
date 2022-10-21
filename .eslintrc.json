@@ -1,3 +1,21 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "quotes": ["error", "double"],
+    "space-in-parens": "error",
+    "no-trailing-spaces": "error",
+    "no-console": "warn",
+    "object-curly-spacing": ["error", "always"],
+    "@typescript-eslint/no-unused-vars": "error"
+  },
+  "root": true,
+  "env": {
+    "commonjs": true
+  }
 }

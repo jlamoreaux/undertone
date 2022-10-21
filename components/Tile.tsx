@@ -1,5 +1,5 @@
-import { CSSProperties, FC, useState } from 'react';
-import Link from 'next/link';
+import { CSSProperties, FC, useState } from "react";
+import Link from "next/link";
 
 
 export interface Book {
@@ -28,13 +28,13 @@ type ChapterTileProps = {
   isRead: boolean;
 }
 
-enum BACKGROUND_COLOR {
-  READ = '#4b4b4b',
-  UNREAD = '#9a9a9a',
+export enum BACKGROUND_COLOR {
+  UNREAD = "var(--mantine-color-gray-6)",
+  READ = "var(--mantine-color-gray-8)",
 }
 
-const TILE_SIZE = '48px';
-const HOVER_SIZE = '52px';
+const TILE_SIZE = "48px";
+const HOVER_SIZE = "52px";
 
 
 export const BaseTile: FC<BaseTileProps> = ({ label, style }) => {
@@ -47,10 +47,10 @@ export const BaseTile: FC<BaseTileProps> = ({ label, style }) => {
   const baseTileStyle: CSSProperties = {
     width: isHover ? HOVER_SIZE : TILE_SIZE,
     height: isHover ? HOVER_SIZE : TILE_SIZE,
-    color: '#efefef',
-    textAlign: 'center',
+    color: "#efefef",
+    textAlign: "center",
     lineHeight: isHover ? HOVER_SIZE : TILE_SIZE,
-    margin: isHover ? '-2px' : 'auto',
+    margin: isHover ? "-2px" : "auto",
     // transition: 'all .2s', not sure how to get this to work without everything "jumping"
   };
   return (
@@ -61,13 +61,13 @@ export const BaseTile: FC<BaseTileProps> = ({ label, style }) => {
 }
 
 export const BookTile: FC<BookTileProps> = ({ book, bookId }) => {
-  
+
   const readPercentage = Math.floor(
     ((book.chaptersRead?.length || 0) / book.chapters) * 100
   );
   const generateBookTileStyle = (readPercentage: number): CSSProperties => {
     return {
-      cursor: 'pointer',
+      cursor: "pointer",
       background: `linear-gradient(90deg, ${BACKGROUND_COLOR.READ} ${readPercentage}%, ${BACKGROUND_COLOR.UNREAD} ${readPercentage}%)`,
     };
   };
@@ -85,9 +85,13 @@ export const BookTile: FC<BookTileProps> = ({ book, bookId }) => {
 
 export const ChapterTile: FC<ChapterTileProps> = ({ chapter, isRead }) => {
   const chapterTileStyle: CSSProperties = {
-    "backgroundColor": isRead ? BACKGROUND_COLOR.READ : BACKGROUND_COLOR.UNREAD
+    "backgroundColor": isRead ? BACKGROUND_COLOR.READ : BACKGROUND_COLOR.UNREAD,
   }
   return (
-    <BaseTile label={chapter.toString()} style={chapterTileStyle} />
+    <Link href="#">
+      <a>
+        <BaseTile label={chapter.toString()} style={chapterTileStyle} />
+      </a>
+    </Link>
   )
 }

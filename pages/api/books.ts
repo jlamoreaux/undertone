@@ -6,7 +6,7 @@ const getBooks = async (req: NextApiRequest, res: NextApiResponse) => {
   const jsonDirectory = path.join(process.cwd(), "json");
   const fileContents = await fs.readFile(jsonDirectory + "/books.json", "utf8");
 
-  const {id} = req.query
+  const { id } = req.query
   if (id) {
     const book = JSON.parse(fileContents)[Number(id)];
     if (book) {
@@ -20,4 +20,4 @@ const getBooks = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json(books);
 }
 
-export default getBooks; 
+export default getBooks;

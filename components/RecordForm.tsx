@@ -1,19 +1,18 @@
-import { useState } from 'react'
-import { useForm } from '@mantine/form';
-import { Autocomplete, Box, Button, MultiSelect } from '@mantine/core';
-import { useAllBooks } from '../hooks/useBooks';
-import { ErrorMessage, LoadingMessage } from '../pages/book/[id]';
-import { Book } from './Tile';
-import { ReadingForm } from '../pages';
-import { getStickyValue } from '../hooks/useStickyState';
+import { useState } from "react"
+import { useForm } from "@mantine/form";
+import { Autocomplete, Box, Button, Loader, MultiSelect } from "@mantine/core";
+import { useAllBooks } from "../hooks/useBooks";
+import { ErrorMessage } from "../pages/book/[id]";
+import { Book } from "./Tile";
+import { ReadingForm, ReadingRecord } from "../pages";
+import { getStickyValue } from "../hooks/useStickyState";
 
 type RecordFormProps = {
-  initialValues?: any
   handleSubmit: (record: ReadingForm) => void;
 }
 
 
-const RecordForm = ({ initialValues, handleSubmit }: RecordFormProps) => {
+const RecordForm = ({  handleSubmit }: RecordFormProps) => {
   const { data: books, isError, isLoading } = useAllBooks();
   const [selectedBook, setSelectedBook] = useState<Book>();
   const [chapters, setChapters] = useState<string[]>([]);
@@ -24,8 +23,11 @@ const RecordForm = ({ initialValues, handleSubmit }: RecordFormProps) => {
   }
 
   const handleChapterChange = (chapters: string[]) => {
-    setChapters(chapters.sort());
-    form.setValues({ chapters });
+    const sortedChapters = chapters.sort(
+      (a: string, b: string) => Number(a) - Number(b)
+    );
+    setChapters(sortedChapters);
+    form.setValues({ chapters: sortedChapters });
   }
 
   const form = useForm({
@@ -34,28 +36,28 @@ const RecordForm = ({ initialValues, handleSubmit }: RecordFormProps) => {
       chapters,
     },
     validate: {
-      book: (value: string) => !value ? 'Please select a book' : null,
-      chapters: (value) => !value ? 'Please select at least one chapter' : null,
+      book: (value: string) => !value ? "Please select a book" : null,
+      chapters: (value) => !value ? "Please select at least one chapter" : null,
     },
   });
 
-  const handleFormSave = ({book, chapters}: {book: string | undefined, chapters: String[]}) => {
-    handleSubmit({book, chapters: chapters.map(chapter => Number(chapter))})
+  const handleFormSave = ({ book, chapters }: {book: string | undefined, chapters: string[]}) => {
+    handleSubmit({ book, chapters: chapters.map(chapter => Number(chapter)) })
   }
 
-  
-  if (isLoading) return <LoadingMessage />
+
+  if (isLoading) return <Loader />
   if (isError) return <ErrorMessage />
-  
+
   const getBookChapters = (book: Book | undefined) => {
     const numChapters = book?.chapters;
-    const readingRecord = getStickyValue('readingRecord');
+    const readingRecord = getStickyValue<ReadingRecord>("readingRecord");
     const readChapters = book && readingRecord && readingRecord[book?.name];
-    let chapters: { value: string, label: string, group: string }[] = [];
+    const chapters: { value: string, label: string, group: string }[] = [];
     if (numChapters) {
       for (let i = 1; i <= numChapters; i++) {
         let group = "Chapters";
-        if (readChapters && readChapters.includes(i)) {
+        if (readChapters && readChapters[i]) {
           group = "Previously Read Chapters"
         }
         chapters.push({ value: i.toString(), label: i.toString(), group });
@@ -66,12 +68,12 @@ const RecordForm = ({ initialValues, handleSubmit }: RecordFormProps) => {
 
   return (
     <Box>
-      <form onSubmit={form.onSubmit((values) => handleFormSave({book: values.book, chapters: values.chapters}))}>
+      <form onSubmit={form.onSubmit((values) => handleFormSave({ book: values.book, chapters: values.chapters }))}>
         <Autocomplete
           data={books.map((book) => book.name)}
           label="Bible Book"
           value={selectedBook?.name}
-          {...form.getInputProps('book')}
+          {...form.getInputProps("book")}
           onChange={handleBookChange}
           placeholder="Begin typing to select"
         />
@@ -80,10 +82,10 @@ const RecordForm = ({ initialValues, handleSubmit }: RecordFormProps) => {
           disabled={!selectedBook}
           label="Chapters"
           placeholder={
-            selectedBook ? 'Chapters' : 'Chapters -- Select a book first'
+            selectedBook ? "Chapters" : "Chapters -- Select a book first"
           }
           searchable
-          {...form.getInputProps('chapters')}
+          {...form.getInputProps("chapters")}
           onChange={handleChapterChange}
           value={chapters}
         />
