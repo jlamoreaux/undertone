@@ -10,7 +10,7 @@ type ModalButtonProps = {
   closeModal?: () => void;
 }
 
-const ModalButton = ({ children, buttonLabel, modalTitle, closeModal, opened, openModal}: ModalButtonProps) => {
+const ModalButton = ({ children, buttonLabel, modalTitle, closeModal, opened, openModal }: ModalButtonProps) => {
   const [isModalOpen, setIsModalOpen] =  useState<boolean>(false)
 
   const handleModalOpen = openModal ? openModal : () => setIsModalOpen(true);
@@ -24,7 +24,7 @@ const ModalButton = ({ children, buttonLabel, modalTitle, closeModal, opened, op
       >
         {children}
       </Modal>
-      <Button onClick={handleModalOpen} >{buttonLabel}</Button>
+      <Button onClick={handleModalOpen} color="gray.6">{buttonLabel}</Button>
     </>
   );
 }

@@ -2,10 +2,11 @@ import useSWR from "swr";
 import { Book } from "../components/Tile";
 import { jsonFetcher } from "../utils/jsonFetcher";
 import { getStickyValue } from "../hooks/useStickyState";
+import { ReadingRecord } from "../pages";
 
 type BaseBookResponse = {
   isLoading: boolean;
-  isError: any;
+  isError: Error | undefined;
 };
 
 type AllBooksResponse = BaseBookResponse & {
@@ -20,7 +21,7 @@ export const useAllBooks = (): AllBooksResponse => {
   const { data, error } = useSWR("/api/books", jsonFetcher);
 
   if (data) {
-    const readingRecord = getStickyValue('readingRecord');
+    const readingRecord = getStickyValue<ReadingRecord>("readingRecord");
     if (readingRecord) {
       Object.keys(readingRecord).forEach(book => {
         data.find((b: Book) => b.name === book).chaptersRead = readingRecord[book]
@@ -36,10 +37,10 @@ export const useAllBooks = (): AllBooksResponse => {
 }
 
 export const useBook = (id: string | undefined): SingleBookResponse => {
-  const { data, error } = useSWR<Book, any>(`/api/books?id=${id}`, jsonFetcher);
+  const { data, error } = useSWR<Book, Error>(`/api/books?id=${id}`, jsonFetcher);
 
   if (data) {
-    const readingRecord = getStickyValue('readingRecord')
+    const readingRecord = getStickyValue<ReadingRecord>("readingRecord")
     if (readingRecord) {
       data.chaptersRead = readingRecord[data.name];
     }
