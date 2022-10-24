@@ -7,6 +7,7 @@ import { useAllBooks } from "../hooks/useBooks";
 import useStickyState, { getStickyValue } from "../hooks/useStickyState";
 import ModalButton from "../components/ModalButton";
 import RecordForm from "../components/RecordForm";
+import { sortNumerically } from "../utils/sortNumerically";
 
 export type ReadingRecord = {
   [book: string]: number[];
@@ -23,10 +24,6 @@ const sortAndRemoveDuplicateChapters = (chapters: number[]) => {
   return chapters.filter((chapter) => {
     return alreadySeenChapters[chapter] ? false : (alreadySeenChapters[chapter] = true);
   });
-}
-
-const sortNumerically = (numbers: number[]) => {
-  return numbers.sort((a: number, b: number) => a - b)
 }
 
 const Home: NextPage = () => {

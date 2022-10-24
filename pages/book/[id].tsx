@@ -52,16 +52,11 @@ const BookPage = () => {
   const [chapterSelection, setChapterSelection] = useState<ChapterSelection>({});
   const router = useRouter();
   const { id } = router.query;
+
   const { data, isError, isLoading } = useBook(id as string);
 
   const beginRecording = () => {
     setIsRecording(true);
-    if (chaptersRead) {
-      const initialSelectedChapters = chaptersRead?.reduce((acc: ChapterSelection, chapter) => {
-        return (acc[chapter]=true, acc)
-      }, {})
-      setChapterSelection(initialSelectedChapters);
-    }
   }
   const cancelRecording = () => setIsRecording(false);
   const saveRecording = () => {
@@ -73,30 +68,33 @@ const BookPage = () => {
     setChapterSelection(updatedChapterSelection);
   }
 
+
   if (isLoading) return <Loader />
   if (isError || !data) return <ErrorMessage />
 
-  const { name, chapters, chaptersRead } = data;
+  const { name, chapters, chaptersRead = {} } = data;
 
-  const chapterTiles = [];
-  for (let i = 1; i <= chapters; i++) {
-    chapterTiles.push(
-      <ChapterTile
-        beginRecording={beginRecording}
-        bookTitle={name}
-        chapter={i}
-        isRead={chaptersRead?.includes(i) || false}
-        isRecording={isRecording}
-        isSelected={!!chapterSelection[i]}
-        key={i}
-        toggleTileSelected={toggleTileSelected}
-      />
-    )
-  }
+    const chapterTiles = [...Array(chapters).keys()].map((chapter) => {
+      return (
+        <ChapterTile
+          beginRecording={beginRecording}
+          bookTitle={name}
+          chapter={chapter}
+          isRead={chaptersRead[chapter]}
+          isRecording={isRecording}
+          isSelectedByDefault={chaptersRead[chapter]}
+          key={chapter}
+          toggleTileSelected={toggleTileSelected}
+        />
+      );
+    });
+
   return (
     <section>
       <BookPageHeader pageTitle={name} isRecording={isRecording} cancelRecording={cancelRecording} saveRecording={saveRecording} />
-      <GridLayout>{chapterTiles}</GridLayout>
+      <GridLayout>
+        {chapterTiles}
+      </GridLayout>
     </section>
   )
 };

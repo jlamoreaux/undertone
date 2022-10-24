@@ -7,6 +7,12 @@ const getBooks = async (req: NextApiRequest, res: NextApiResponse) => {
   const fileContents = await fs.readFile(jsonDirectory + "/books.json", "utf8");
 
   const id = req.query.id;
+
+  if (!id) {
+    const books = JSON.parse(fileContents);
+    return res.status(200).json(books);
+  }
+
   if (isNaN(Number(id))) {
     res.status(400).end();
   }
@@ -19,8 +25,6 @@ const getBooks = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     return;
   }
-  const books = JSON.parse(fileContents);
-  return res.status(200).json(books);
 }
 
 export default getBooks;

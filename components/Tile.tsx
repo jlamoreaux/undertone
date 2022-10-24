@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Box, List, Popover, ThemeIcon } from "@mantine/core";
 import { IconBook, IconExternalLink, IconPencil } from "@tabler/icons";
 import { useClickOutside } from "@mantine/hooks";
+import { ChaptersRead } from "../hooks/useBooks";
 
 
 export interface Book {
@@ -13,7 +14,7 @@ export interface Book {
   };
   chapters: number;
   shortName: string;
-  chaptersRead?: number[];
+  chaptersRead?: ChaptersRead;
 }
 
 type BaseTileProps = React.DOMAttributes<HTMLDivElement> & {
@@ -31,7 +32,7 @@ type ChapterTileProps = {
   chapter: number;
   isRead: boolean;
   isRecording: boolean;
-  isSelected: boolean;
+  isSelectedByDefault: boolean;
   beginRecording: () => void;
   toggleTileSelected: (chapter: number)=> void;
 };
@@ -76,9 +77,9 @@ export const BaseTile: FC<BaseTileProps> = ({ label, style, ...attributes }) => 
 
 export const BookTile: FC<BookTileProps> = ({ book, bookId }) => {
 
-  const readPercentage = Math.floor(
-    ((book.chaptersRead?.length || 0) / book.chapters) * 100
-  );
+  const readPercentage = book.chaptersRead && Math.floor(
+    ((Object.keys(book.chaptersRead).length || 0) / book.chapters) * 100
+  ) || 0;
   const generateBookTileStyle = (readPercentage: number): CSSProperties => {
     return {
       cursor: "pointer",
@@ -97,7 +98,8 @@ export const BookTile: FC<BookTileProps> = ({ book, bookId }) => {
   );
 };
 
-export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, isRead, isRecording, isSelected, toggleTileSelected, beginRecording }) => {
+export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, isRead, isRecording, isSelectedByDefault, toggleTileSelected, beginRecording }) => {
+  const [isSelected, setIsSelected] = useState<boolean>(isSelectedByDefault);
   const [popoverOpened, setPopoverOpened] = useState<boolean>(false);
   const ref = useClickOutside(() => setPopoverOpened(false));
 
@@ -111,7 +113,12 @@ export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, isRead, 
   }
 
   const handleChapterSelectionChange = () => {
+    setIsSelected(!isSelected);
     toggleTileSelected(chapter);
+  }
+
+  const togglePopoverOpen = () => {
+    setPopoverOpened(!popoverOpened);
   }
 
   return (
@@ -133,7 +140,7 @@ export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, isRead, 
             <BaseTile
               label={chapter.toString()}
               style={chapterTileStyle}
-              onClickCapture={() => setPopoverOpened(true)}
+              onClickCapture={togglePopoverOpen}
             />
           </Popover.Target>
           <Popover.Dropdown>

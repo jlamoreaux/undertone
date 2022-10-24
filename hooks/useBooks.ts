@@ -17,6 +17,11 @@ export type SingleBookResponse = BaseBookResponse & {
   data: Book | undefined;
 }
 
+export type ChaptersRead = {
+  [key: number]: boolean;
+}
+
+
 export const useAllBooks = (): AllBooksResponse => {
   const { data, error } = useSWR("/api/books", jsonFetcher);
 
@@ -24,7 +29,10 @@ export const useAllBooks = (): AllBooksResponse => {
     const readingRecord = getStickyValue<ReadingRecord>("readingRecord");
     if (readingRecord) {
       Object.keys(readingRecord).forEach(book => {
-        data.find((b: Book) => b.name === book).chaptersRead = readingRecord[book]
+        data.find((b: Book) => b.name === book).chaptersRead =
+          readingRecord[book].reduce((acc: ChaptersRead, chapter) => {
+            return (acc[chapter] = true), acc;
+          }, {}) || {};
       })
     }
   }
@@ -42,7 +50,10 @@ export const useBook = (id: string | undefined): SingleBookResponse => {
   if (data) {
     const readingRecord = getStickyValue<ReadingRecord>("readingRecord")
     if (readingRecord) {
-      data.chaptersRead = readingRecord[data.name];
+      data.chaptersRead =
+        readingRecord[data.name].reduce((acc: ChaptersRead, chapter) => {
+          return (acc[chapter] = true), acc;
+        }, {}) || {};
     }
   }
 
