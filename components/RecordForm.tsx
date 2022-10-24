@@ -53,17 +53,20 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
     const numChapters = book?.chapters;
     const readingRecord = getStickyValue<ReadingRecord>("readingRecord");
     const readChapters = book && readingRecord && readingRecord[book?.name];
-    const chapters: { value: string, label: string, group: string }[] = [];
+    const chaptersToAdd: { value: string, label: string, group: string }[] = [];
+    const readChaptersToAdd: { value: string, label: string, group: string }[] = [];
     if (numChapters) {
       for (let i = 1; i <= numChapters; i++) {
         let group = "Chapters";
         if (readChapters && readChapters[i]) {
-          group = "Previously Read Chapters"
+          group = "Previously Read Chapters";
+          readChaptersToAdd.push({ value: i.toString(), label: i.toString(), group });
+        } else {
+          chaptersToAdd.push({ value: i.toString(), label: i.toString(), group });
         }
-        chapters.push({ value: i.toString(), label: i.toString(), group });
       }
     }
-    return chapters
+    return [...chaptersToAdd, ...readChaptersToAdd]
   }
 
   return (
