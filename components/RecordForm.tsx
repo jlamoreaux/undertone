@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { useForm } from "@mantine/form";
 import { Autocomplete, Box, Button, Loader, MultiSelect } from "@mantine/core";
-import { useAllBooks } from "../hooks/useBooks";
+import { Book, useAllBooks } from "../hooks/useBooks";
 import { ErrorMessage } from "../pages/book/[id]";
-import { Book } from "./Tile";
 import { ReadingForm, ReadingRecord } from "../pages";
 import { getStickyValue } from "../hooks/useStickyState";
 
@@ -18,7 +17,7 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
   const [chapters, setChapters] = useState<string[]>([]);
 
   const handleBookChange = (bookName: string) => {
-    setSelectedBook(books.find(book => book.name === bookName));
+    setSelectedBook(books?.find(book => book.name === bookName));
     form.setValues({ book: bookName });
   }
 
@@ -47,23 +46,26 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
 
 
   if (isLoading) return <Loader />
-  if (isError) return <ErrorMessage />
+  if (!books || isError) return <ErrorMessage />
 
   const getBookChapters = (book: Book | undefined) => {
     const numChapters = book?.chapters;
     const readingRecord = getStickyValue<ReadingRecord>("readingRecord");
     const readChapters = book && readingRecord && readingRecord[book?.name];
-    const chapters: { value: string, label: string, group: string }[] = [];
+    const chaptersToAdd: { value: string, label: string, group: string }[] = [];
+    const readChaptersToAdd: { value: string, label: string, group: string }[] = [];
     if (numChapters) {
       for (let i = 1; i <= numChapters; i++) {
         let group = "Chapters";
         if (readChapters && readChapters[i]) {
-          group = "Previously Read Chapters"
+          group = "Previously Read Chapters";
+          readChaptersToAdd.push({ value: i.toString(), label: i.toString(), group });
+        } else {
+          chaptersToAdd.push({ value: i.toString(), label: i.toString(), group });
         }
-        chapters.push({ value: i.toString(), label: i.toString(), group });
       }
     }
-    return chapters
+    return [...chaptersToAdd, ...readChaptersToAdd]
   }
 
   return (

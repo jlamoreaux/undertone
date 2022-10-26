@@ -31,9 +31,11 @@ function useStickyState<Type>(
  * @returns the key value pair of the object in local storage
  */
 export function getStickyValue<Type>(key: string): Type | null {
-  const value = window.localStorage.getItem(key);
-  if (value) {
-    return JSON.parse(value);
+  if (typeof window !== "undefined") {
+    const value = window.localStorage.getItem(key);
+    if (value) {
+      return JSON.parse(value);
+    }
   }
   return null;
 }
@@ -44,7 +46,9 @@ export function getStickyValue<Type>(key: string): Type | null {
  * @param value the value to be saved
  */
 export function setStickyValue<Type>(key: string, value: Type): void {
-  return window.localStorage.setItem(key, JSON.stringify(value));
+  if (typeof window !== "undefined") {
+    return window.localStorage.setItem(key, JSON.stringify(value));
+  }
 }
 
 /**
@@ -53,9 +57,11 @@ export function setStickyValue<Type>(key: string, value: Type): void {
  * @returns
  */
 export const clearStickyValues = (keys: string[]) => {
-  keys.forEach(key => {
-    window.localStorage.removeItem(key);
-  })
+  if (typeof window !== "undefined") {
+    keys.forEach(key => {
+      window.localStorage.removeItem(key);
+    })
+  }
   return;
 };
 

@@ -2,15 +2,16 @@ import { ReactNode, useState } from "react"
 import { Button, Modal } from "@mantine/core"
 
 type ModalButtonProps = {
-  buttonLabel: string,
-  children?: ReactNode[] | string,
-  modalTitle?: string,
-  opened?: boolean,
+  buttonLabel: string;
+  buttonTitle?: string;
+  children?: ReactNode[] | string;
+  modalTitle?: string;
+  opened?: boolean;
   openModal?: () => void;
   closeModal?: () => void;
-}
+};
 
-const ModalButton = ({ children, buttonLabel, modalTitle, closeModal, opened, openModal }: ModalButtonProps) => {
+const ModalButton = ({ children, buttonLabel, buttonTitle, modalTitle, closeModal, opened, openModal }: ModalButtonProps) => {
   const [isModalOpen, setIsModalOpen] =  useState<boolean>(false)
 
   const handleModalOpen = openModal ? openModal : () => setIsModalOpen(true);
@@ -24,7 +25,7 @@ const ModalButton = ({ children, buttonLabel, modalTitle, closeModal, opened, op
       >
         {children}
       </Modal>
-      <Button onClick={handleModalOpen} color="gray.6">{buttonLabel}</Button>
+      <Button title={buttonTitle} onClick={handleModalOpen} color="gray.6">{buttonLabel}</Button>
     </>
   );
 }
