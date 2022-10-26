@@ -76,7 +76,6 @@ const BookPage = () => {
   }
   const cancelRecording = () => setIsRecording(false);
   const saveRecording = () => {
-    console.log(chapterSelection);
     const chapters: number[] = [];
     Object.keys(chapterSelection).forEach((key: string) => {
       const chapter = Number(key);
