@@ -18,7 +18,7 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
   const [chapters, setChapters] = useState<string[]>([]);
 
   const handleBookChange = (bookName: string) => {
-    setSelectedBook(books.find(book => book.name === bookName));
+    setSelectedBook(books?.find(book => book.name === bookName));
     form.setValues({ book: bookName });
   }
 
@@ -47,7 +47,7 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
 
 
   if (isLoading) return <Loader />
-  if (isError) return <ErrorMessage />
+  if (!books || isError) return <ErrorMessage />
 
   const getBookChapters = (book: Book | undefined) => {
     const numChapters = book?.chapters;

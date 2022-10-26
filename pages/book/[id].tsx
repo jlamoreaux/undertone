@@ -6,6 +6,7 @@ import { useBook } from "../../hooks/useBooks";
 import Link from "next/link";
 import { IconArrowLeft, IconCheck, IconX } from "@tabler/icons";
 import { useState } from "react";
+import { recordReading } from "..";
 
 export const ErrorMessage = () => <div>Uh oh! Something went wrong!</div>
 
@@ -25,26 +26,34 @@ const BookPageHeader = ({ pageTitle, isRecording, cancelRecording, saveRecording
     <div style={{ display: "flex", flexDirection: "row" }}>
       <Group noWrap={true}>
         <Link href="/">
-          <ActionIcon title="Go Back" aria-label='Go Back'>
-            <IconArrowLeft size={32} />
-          </ActionIcon>
+            <ActionIcon title="Go Back" aria-label="Go Back">
+              <IconArrowLeft size={32} />
+            </ActionIcon>
         </Link>
         {isRecording && (
           <>
-            <ActionIcon onClickCapture={cancelRecording} title="Cancel" aria-label="cancel">
+            <ActionIcon
+              onClickCapture={cancelRecording}
+              title="Cancel"
+              aria-label="cancel"
+            >
               <IconX size={32} color="red" />
             </ActionIcon>
-            <ActionIcon onClickCapture={saveRecording} title="Save" aria-label="save">
+            <ActionIcon
+              onClickCapture={saveRecording}
+              title="Save"
+              aria-label="save"
+            >
               <IconCheck size={32} color="green" />
             </ActionIcon>
           </>
         )}
       </Group>
-    <Title order={2} style={{ width: "100%", textAlign: "right" }}>
-      {pageTitle}
-    </Title>
-  </div>
-  )
+      <Title order={2} style={{ width: "100%", textAlign: "right" }}>
+        {pageTitle}
+      </Title>
+    </div>
+  );
 }
 
 const BookPage = () => {
@@ -57,9 +66,24 @@ const BookPage = () => {
 
   const beginRecording = () => {
     setIsRecording(true);
+    if (Object.keys(chapterSelection).length < 1 && chaptersRead) {
+      const chapterSelection: ChapterSelection = {};
+      Object.keys(chaptersRead).forEach((key) => {
+        chapterSelection[Number(key)] = true;
+      });
+      setChapterSelection(chapterSelection);
+    }
   }
   const cancelRecording = () => setIsRecording(false);
   const saveRecording = () => {
+    console.log(chapterSelection);
+    const chapters: number[] = [];
+    Object.keys(chapterSelection).forEach((key: string) => {
+      const chapter = Number(key);
+      if (chapterSelection[chapter] === true)
+        chapters.push(chapter);
+    });
+    recordReading({ book: name, chapters })
     setIsRecording(false);
   }
   const toggleTileSelected = (chapter: number) => {
@@ -74,20 +98,20 @@ const BookPage = () => {
 
   const { name, chapters, chaptersRead = {} } = data;
 
-    const chapterTiles = [...Array(chapters).keys()].map((chapter) => {
-      return (
-        <ChapterTile
-          beginRecording={beginRecording}
-          bookTitle={name}
-          chapter={chapter}
-          isRead={chaptersRead[chapter]}
-          isRecording={isRecording}
-          isSelectedByDefault={chaptersRead[chapter]}
-          key={chapter}
-          toggleTileSelected={toggleTileSelected}
-        />
-      );
-    });
+  const chapterTiles = [...Array(chapters).keys()].map((index) => {
+    const chapter = index + 1;
+    return (
+      <ChapterTile
+        beginRecording={beginRecording}
+        bookTitle={name}
+        chapter={chapter}
+        readDates={chaptersRead?.[chapter]}
+        isRecording={isRecording}
+        key={chapter}
+        toggleTileSelected={toggleTileSelected}
+      />
+    );
+  });
 
   return (
     <section>

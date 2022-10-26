@@ -1,7 +1,7 @@
 import { CSSProperties, FC, useState } from "react";
 import Link from "next/link";
 import { Box, List, Popover, ThemeIcon } from "@mantine/core";
-import { IconBook, IconExternalLink, IconPencil } from "@tabler/icons";
+import { IconBook, IconCalendar, IconExternalLink, IconPencil } from "@tabler/icons";
 import { useClickOutside } from "@mantine/hooks";
 import { ChaptersRead } from "../hooks/useBooks";
 
@@ -14,7 +14,7 @@ export interface Book {
   };
   chapters: number;
   shortName: string;
-  chaptersRead?: ChaptersRead;
+  chaptersRead?: ChaptersRead | null;
 }
 
 type BaseTileProps = React.DOMAttributes<HTMLDivElement> & {
@@ -30,9 +30,8 @@ type BookTileProps = {
 type ChapterTileProps = {
   bookTitle: string;
   chapter: number;
-  isRead: boolean;
+  readDates?: Date[];
   isRecording: boolean;
-  isSelectedByDefault: boolean;
   beginRecording: () => void;
   toggleTileSelected: (chapter: number)=> void;
 };
@@ -88,18 +87,17 @@ export const BookTile: FC<BookTileProps> = ({ book, bookId }) => {
   };
   return (
     <Link href={`/book/${bookId}`}>
-      <a>
         <BaseTile
           label={book.shortName}
           style={generateBookTileStyle(readPercentage)}
         />
-      </a>
     </Link>
   );
 };
 
-export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, isRead, isRecording, isSelectedByDefault, toggleTileSelected, beginRecording }) => {
-  const [isSelected, setIsSelected] = useState<boolean>(isSelectedByDefault);
+export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, readDates, isRecording, toggleTileSelected, beginRecording }) => {
+  const isRead = !!readDates;
+  const [isSelected, setIsSelected] = useState<boolean>(isRead);
   const [popoverOpened, setPopoverOpened] = useState<boolean>(false);
   const ref = useClickOutside(() => setPopoverOpened(false));
 
@@ -120,6 +118,8 @@ export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, isRead, 
   const togglePopoverOpen = () => {
     setPopoverOpened(!popoverOpened);
   }
+
+  const lastReadDate = isRead ? new Date(readDates[readDates.length - 1]).toDateString() : "Never"
 
   return (
     <div style={{ margin: "auto", verticalAlign: "middle" }}>
@@ -146,6 +146,15 @@ export const ChapterTile: FC<ChapterTileProps> = ({ bookTitle, chapter, isRead, 
           <Popover.Dropdown>
             <Box ref={ref}>
               <List spacing="xs" size="lg">
+                <List.Item
+                  icon={
+                    <ThemeIcon color={"gray"} size={24} radius="xl">
+                      <IconCalendar size={24} />
+                    </ThemeIcon>
+                  }
+                >
+                  <span>Last read: {lastReadDate}</span>
+                </List.Item>
                 <List.Item
                   icon={
                     <ThemeIcon color={"gray"} size={24} radius="xl">
