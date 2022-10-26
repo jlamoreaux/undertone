@@ -2,6 +2,8 @@ import { ChaptersRead } from "../hooks/useBooks";
 import { getStickyValue, clearStickyValues, setStickyValue } from "../hooks/useStickyState";
 import { ReadingRecord, saveChaptersRead } from "../pages";
 
+const IS_DONE_READING_TODAY = "isDoneRecordingToday";
+
 export const convertFromLegacyStorage = () => {
   // Get existing record from local storage.
   const legacyRecord = getStickyValue<ReadingRecord>("readingRecord");
@@ -12,8 +14,6 @@ export const convertFromLegacyStorage = () => {
     booksToConvert.forEach((book) => {
       const bookRecord = getStickyValue<ChaptersRead>(book);
       if (!bookRecord) {
-        const date = new Date();
-        date.setHours(0, 0, 0, 0);
 
         const chaptersRead: ChaptersRead = {};
         legacyRecord[book].forEach((chapter) => {
@@ -24,6 +24,7 @@ export const convertFromLegacyStorage = () => {
       }
     });
     clearStickyValues(["readingRecord"]);
+    clearStickyValues([IS_DONE_READING_TODAY]);
   }
   setStickyValue("version", "1.0");
 };

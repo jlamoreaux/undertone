@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { useForm } from "@mantine/form";
 import { Autocomplete, Box, Button, Loader, MultiSelect } from "@mantine/core";
-import { useAllBooks } from "../hooks/useBooks";
+import { Book, useAllBooks } from "../hooks/useBooks";
 import { ErrorMessage } from "../pages/book/[id]";
-import { Book } from "./Tile";
 import { ReadingForm, ReadingRecord } from "../pages";
 import { getStickyValue } from "../hooks/useStickyState";
 

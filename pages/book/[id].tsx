@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { Loader, ActionIcon, Title, Group } from "@mantine/core";
 import GridLayout from "../../components/Grid";
-import { ChapterTile } from "../../components/Tile";
+import { ChapterTile } from "../../components/tiles/ChapterTile";
 import { useBook } from "../../hooks/useBooks";
 import Link from "next/link";
 import { IconArrowLeft, IconCheck, IconX } from "@tabler/icons";

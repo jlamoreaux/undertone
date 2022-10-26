@@ -2,12 +2,12 @@ import { useState } from "react";
 import type { NextPage } from "next";
 import { Loader } from "@mantine/core";
 import GridLayout from "../components/Grid";
-import { BookTile } from "../components/Tile";
+import { BookTile } from "../components/tiles/BookTile";
 import { useAllBooks, ChaptersRead } from "../hooks/useBooks";
-import useStickyState, { getStickyValue, setStickyValue } from "../hooks/useStickyState";
+import { getStickyValue, setStickyValue } from "../hooks/useStickyState";
 import ModalButton from "../components/ModalButton";
 import RecordForm from "../components/RecordForm";
-import { convertFromLegacyStorage, sortNumerically } from "../utils";
+import { convertFromLegacyStorage, getLastDatePlayed, setLastDatePlayed, sortNumerically } from "../utils";
 
 export type ReadingRecord = {
   [book: string]: number[];
@@ -17,8 +17,6 @@ export type ReadingForm = {
   book: string | undefined;
   chapters: number[];
 }
-
-const STICKY_IS_DONE_READING_TODAY = "isDoneRecordingToday";
 
 export const sortAndRemoveDuplicateChapters = (chapters: number[]) => {
   chapters = sortNumerically(chapters);
@@ -45,28 +43,39 @@ export const recordReading = (record: ReadingForm) => {
   }
 
   const currentBookRecord = getStickyValue<ChaptersRead>(book);
-  const newBookRecord: ChaptersRead = {};
+  const newBookRecord: ChaptersRead = currentBookRecord || {};
 
-  const date = new Date();
-  date.setHours(0, 0, 0, 0);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   chapters.forEach((chapter) => {
     if (currentBookRecord && currentBookRecord[chapter]) {
-      if (currentBookRecord[chapter].indexOf(date) !== -1) {
-        newBookRecord[chapter].push(date);
+      if (currentBookRecord[chapter].indexOf(today) !== -1) {
+        newBookRecord[chapter].push(today);
       }
+      return;
     } else {
-      newBookRecord[chapter] = [date];
+      newBookRecord[chapter] = [today];
     }
   });
   setStickyValue(book, newBookRecord);
+  setLastDatePlayed(today);
 }
+
+const checkIfRecordedToday = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const lastDatePlayed = getLastDatePlayed();
+  if (!lastDatePlayed || new Date(lastDatePlayed) < today) {
+    return false
+  }
+  return true;
+};
 
 const Home: NextPage = () => {
   const { data: books, isError, isLoading } = useAllBooks();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isDoneRecordingToday, setIsDoneRecordingToday] =
-    useStickyState<boolean>(false, STICKY_IS_DONE_READING_TODAY);
+  const [isDoneRecordingToday, setIsDoneRecordingToday] = useState<boolean>(checkIfRecordedToday());
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
@@ -90,13 +99,16 @@ const Home: NextPage = () => {
   return (
     <>
       <section>
-        <div style={{ textAlign: "center" }}>
+        <div style={{ textAlign: "center", display: "flex", flexDirection: "row", flexWrap: "nowrap" }}>
+          <span style={{ margin: "8px" }}>
           {isDoneRecordingToday
             ? "Great job doing your reading! Need to record more?"
             : "Record today's Bible reading?"}
-          <br />
+          </span>
           <ModalButton
             buttonLabel="📖"
+            buttonTitle="Record Your Reading"
+            modalTitle="Record your reading for the day"
             opened={isModalOpen}
             closeModal={handleModalClose}
             openModal={handleModalOpen}

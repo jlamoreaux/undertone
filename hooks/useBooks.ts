@@ -1,7 +1,17 @@
 import useSWR from "swr";
-import { Book } from "../components/Tile";
 import { jsonFetcher } from "../utils";
 import { getStickyValue } from "../hooks/useStickyState";
+
+export interface Book {
+  name: string;
+  metadata: {
+    bookType: string;
+    jwLink: string;
+  };
+  chapters: number;
+  shortName: string;
+  chaptersRead?: ChaptersRead | null;
+}
 
 type BaseBookResponse = {
   isLoading: boolean;
