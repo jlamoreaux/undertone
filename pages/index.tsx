@@ -4,10 +4,10 @@ import { Loader } from "@mantine/core";
 import GridLayout from "../components/Grid";
 import { BookTile } from "../components/Tile";
 import { useAllBooks, ChaptersRead } from "../hooks/useBooks";
-import useStickyState, { clearStickyValues, getStickyValue, setStickyValue } from "../hooks/useStickyState";
+import useStickyState, { getStickyValue, setStickyValue } from "../hooks/useStickyState";
 import ModalButton from "../components/ModalButton";
 import RecordForm from "../components/RecordForm";
-import { sortNumerically } from "../utils/sortNumerically";
+import { convertFromLegacyStorage, sortNumerically } from "../utils";
 
 export type ReadingRecord = {
   [book: string]: number[];
@@ -61,34 +61,6 @@ export const recordReading = (record: ReadingForm) => {
   });
   setStickyValue(book, newBookRecord);
 }
-
-const convertFromLegacyStorage = () => {
-  // Get existing record from local storage.
-  const legacyRecord = getStickyValue<ReadingRecord>("readingRecord");
-
-  if (legacyRecord) {
-    // Convert to new version of storage
-    const booksToConvert = Object.keys(legacyRecord);
-    booksToConvert.forEach(book => {
-      const bookRecord = getStickyValue<ChaptersRead>(book);
-      if (!bookRecord) {
-        const date = new Date();
-        date.setHours(0, 0, 0, 0);
-
-        const chaptersRead: ChaptersRead = {}
-        legacyRecord[book].forEach(chapter => {
-          chaptersRead[chapter]
-        })
-
-        saveChaptersRead({ book, chaptersRead });
-      }
-    })
-    clearStickyValues(["readingRecord"]);
-  }
-  setStickyValue("version", "1.0");
-}
-
-
 
 const Home: NextPage = () => {
   const { data: books, isError, isLoading } = useAllBooks();

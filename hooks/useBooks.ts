@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { Book } from "../components/Tile";
-import { jsonFetcher } from "../utils/jsonFetcher";
+import { jsonFetcher } from "../utils";
 import { getStickyValue } from "../hooks/useStickyState";
 
 type BaseBookResponse = {
