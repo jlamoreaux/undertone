@@ -7,7 +7,7 @@ import { useAllBooks, ChaptersRead } from "../hooks/useBooks";
 import { getStickyValue, setStickyValue } from "../hooks/useStickyState";
 import ModalButton from "../components/ModalButton";
 import RecordForm from "../components/RecordForm";
-import { convertFromLegacyStorage, getLastDatePlayed, setLastDatePlayed, sortNumerically } from "../utils";
+import { convertFromLegacyStorage, getLastDateRecorded, getStreakLength, setLastDateRecorded, sortNumerically } from "../utils";
 
 export type ReadingRecord = {
   [book: string]: number[];
@@ -42,6 +42,7 @@ export const recordReading = (record: ReadingForm) => {
     return;
   }
 
+  const streakLength = getStreakLength();
   const currentBookRecord = getStickyValue<ChaptersRead>(book);
   const newBookRecord: ChaptersRead = currentBookRecord || {};
 
@@ -58,14 +59,18 @@ export const recordReading = (record: ReadingForm) => {
       newBookRecord[chapter] = [today];
     }
   });
+
+  if (streakLength === 0) {
+    setStickyValue("startOfStreak", today);
+  }
   setStickyValue(book, newBookRecord);
-  setLastDatePlayed(today);
+  setLastDateRecorded(today);
 }
 
 const checkIfRecordedToday = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const lastDatePlayed = getLastDatePlayed();
+  const lastDatePlayed = getLastDateRecorded();
   if (!lastDatePlayed || new Date(lastDatePlayed) < today) {
     return false
   }
@@ -101,9 +106,9 @@ const Home: NextPage = () => {
       <section>
         <div style={{ textAlign: "center", display: "flex", flexDirection: "row", flexWrap: "nowrap" }}>
           <span style={{ margin: "8px" }}>
-          {isDoneRecordingToday
-            ? "Great job doing your reading! Need to record more?"
-            : "Record today's Bible reading?"}
+            {isDoneRecordingToday
+              ? "Great job doing your reading! Need to record more?"
+              : "Record today's Bible reading?"}
           </span>
           <ModalButton
             buttonLabel="📖"
