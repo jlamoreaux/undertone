@@ -10,7 +10,7 @@ export type ChapterTileProps = {
   chapter: number;
   readDates?: Date[];
   isRecording: boolean;
-  beginRecording: () => void;
+  beginRecording: ({ chapter }: {chapter?: number}) => void;
   toggleTileSelected: (chapter: number) => void;
 };
 
@@ -42,6 +42,11 @@ export const ChapterTile: FC<ChapterTileProps> = ({
     setIsSelected(!isSelected);
     toggleTileSelected(chapter);
   };
+
+  const handleBeginRecording = () => {
+    setIsSelected(true);
+    beginRecording({ chapter });
+  }
 
   const togglePopoverOpen = () => {
     setPopoverOpened(!popoverOpened);
@@ -77,7 +82,7 @@ export const ChapterTile: FC<ChapterTileProps> = ({
             <Box ref={ref}>
               <List spacing="xs" size="lg">
                 <List.Item
-                  onClickCapture={beginRecording}
+                  onClickCapture={handleBeginRecording}
                   style={{ cursor: "pointer" }}
                   icon={
                     <ThemeIcon color={"gray"} size={24} radius="xl">

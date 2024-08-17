@@ -64,8 +64,11 @@ const BookPage = () => {
 
   const { data, isError, isLoading } = useBook(id as string);
 
-  const beginRecording = () => {
+  const beginRecording = ({ chapter }: {chapter?: number}) => {
     setIsRecording(true);
+    if (chapter) {
+      selectTile(chapter);
+    }
     if (Object.keys(chapterSelection).length < 1 && chaptersRead) {
       const chapterSelection: ChapterSelection = {};
       Object.keys(chaptersRead).forEach((key) => {
@@ -84,6 +87,11 @@ const BookPage = () => {
     });
     recordReading({ book: name, chapters })
     setIsRecording(false);
+  }
+  const selectTile = (chapter: number) => {
+    const updatedChapterSelection = chapterSelection;
+    updatedChapterSelection[chapter] = true;
+    setChapterSelection(updatedChapterSelection);
   }
   const toggleTileSelected = (chapter: number) => {
     const updatedChapterSelection = chapterSelection;
