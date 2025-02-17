@@ -8,7 +8,7 @@ import { IconArrowLeft, IconCheck, IconX } from "@tabler/icons";
 import { useState } from "react";
 import { recordReading } from "..";
 
-export const ErrorMessage = () => <div>Uh oh! Something went wrong!</div>
+export const ErrorMessage = () => <div>Uh oh! Something went wrong!</div>;
 
 interface BookPageHeaderProps {
   pageTitle: string;
@@ -21,14 +21,19 @@ interface ChapterSelection {
   [key: number]: boolean;
 }
 
-const BookPageHeader = ({ pageTitle, isRecording, cancelRecording, saveRecording }: BookPageHeaderProps) => {
+const BookPageHeader = ({
+  pageTitle,
+  isRecording,
+  cancelRecording,
+  saveRecording,
+}: BookPageHeaderProps) => {
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
       <Group noWrap={true}>
         <Link href="/">
-            <ActionIcon title="Go Back" aria-label="Go Back">
-              <IconArrowLeft size={32} />
-            </ActionIcon>
+          <ActionIcon title="Go Back" aria-label="Go Back">
+            <IconArrowLeft size={32} />
+          </ActionIcon>
         </Link>
         {isRecording && (
           <>
@@ -54,11 +59,13 @@ const BookPageHeader = ({ pageTitle, isRecording, cancelRecording, saveRecording
       </Title>
     </div>
   );
-}
+};
 
 const BookPage = () => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [chapterSelection, setChapterSelection] = useState<ChapterSelection>({});
+  const [chapterSelection, setChapterSelection] = useState<ChapterSelection>(
+    {}
+  );
   const router = useRouter();
   const { id } = router.query;
 
@@ -73,27 +80,25 @@ const BookPage = () => {
       });
       setChapterSelection(chapterSelection);
     }
-  }
+  };
   const cancelRecording = () => setIsRecording(false);
   const saveRecording = () => {
     const chapters: number[] = [];
     Object.keys(chapterSelection).forEach((key: string) => {
       const chapter = Number(key);
-      if (chapterSelection[chapter] === true)
-        chapters.push(chapter);
+      if (chapterSelection[chapter] === true) chapters.push(chapter);
     });
-    recordReading({ book: name, chapters })
+    recordReading({ book: name, chapters });
     setIsRecording(false);
-  }
+  };
   const toggleTileSelected = (chapter: number) => {
     const updatedChapterSelection = chapterSelection;
     updatedChapterSelection[chapter] = !chapterSelection[chapter];
     setChapterSelection(updatedChapterSelection);
-  }
+  };
 
-
-  if (isLoading) return <Loader />
-  if (isError || !data) return <ErrorMessage />
+  if (isLoading) return <Loader />;
+  if (isError || !data) return <ErrorMessage />;
 
   const { name, chapters, chaptersRead = {} } = data;
 
@@ -114,12 +119,15 @@ const BookPage = () => {
 
   return (
     <section>
-      <BookPageHeader pageTitle={name} isRecording={isRecording} cancelRecording={cancelRecording} saveRecording={saveRecording} />
-      <GridLayout>
-        {chapterTiles}
-      </GridLayout>
+      <BookPageHeader
+        pageTitle={name}
+        isRecording={isRecording}
+        cancelRecording={cancelRecording}
+        saveRecording={saveRecording}
+      />
+      <GridLayout>{chapterTiles}</GridLayout>
     </section>
-  )
+  );
 };
 
 export default BookPage;

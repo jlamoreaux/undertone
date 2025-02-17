@@ -1,9 +1,18 @@
 import { Popover, Box, List, ThemeIcon } from "@mantine/core";
 import { useClickOutside } from "@mantine/hooks";
-import { IconCalendar, IconBook, IconExternalLink, IconPencil } from "@tabler/icons";
+import {
+  IconCalendar,
+  IconBook,
+  IconExternalLink,
+  IconPencil,
+} from "@tabler/icons";
 import Link from "next/link";
 import { FC, useState, CSSProperties } from "react";
-import { BACKGROUND_COLOR, BaseTile, RECORDING_BACKGROUND_COLOR } from "./BaseTile";
+import {
+  BACKGROUND_COLOR,
+  BaseTile,
+  RECORDING_BACKGROUND_COLOR,
+} from "./BaseTile";
 
 export type ChapterTileProps = {
   bookTitle: string;
@@ -96,10 +105,9 @@ export const ChapterTile: FC<ChapterTileProps> = ({
                 >
                   <Link
                     href={`https://www.jw.org/en/library/bible/nwt/books/${bookTitle}/${chapter}/`}
+                    target="_blank"
                   >
-                    <a>
-                      Read <IconExternalLink />
-                    </a>
+                    Read <IconExternalLink />
                   </Link>
                 </List.Item>
                 <List.Item
