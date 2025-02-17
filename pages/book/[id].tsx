@@ -4,7 +4,7 @@ import GridLayout from "../../components/Grid";
 import { ChapterTile } from "../../components/tiles/ChapterTile";
 import { useBook } from "../../hooks/useBooks";
 import Link from "next/link";
-import { IconArrowLeft, IconCheck, IconX } from "@tabler/icons";
+import { IconArrowLeft, IconCheck, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import { recordReading } from "..";
 

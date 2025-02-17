@@ -5,7 +5,7 @@ import {
   IconBook,
   IconExternalLink,
   IconPencil,
-} from "@tabler/icons";
+} from "@tabler/icons-react";
 import Link from "next/link";
 import { FC, useState, CSSProperties } from "react";
 import {
