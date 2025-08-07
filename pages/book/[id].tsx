@@ -29,7 +29,7 @@ const BookPageHeader = ({
 }: BookPageHeaderProps) => {
   return (
     <div style={{ display: "flex", flexDirection: "row" }}>
-      <Group noWrap={true}>
+      <Group wrap="nowrap">
         <Link href="/">
           <ActionIcon title="Go Back" aria-label="Go Back">
             <IconArrowLeft size={32} />

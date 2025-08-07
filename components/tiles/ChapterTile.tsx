@@ -73,7 +73,7 @@ export const ChapterTile: FC<ChapterTileProps> = ({
           closeOnClickOutside={true}
           opened={popoverOpened}
           position="bottom"
-          transition="slide-down"
+          transitionProps={{ transition: "slide-down" }}
         >
           <Popover.Target>
             <BaseTile
