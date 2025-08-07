@@ -4,7 +4,7 @@ import { Button, Modal } from "@mantine/core"
 type ModalButtonProps = {
   buttonLabel: string;
   buttonTitle?: string;
-  children?: ReactNode[] | string;
+  children?: ReactNode;
   modalTitle?: string;
   opened?: boolean;
   openModal?: () => void;

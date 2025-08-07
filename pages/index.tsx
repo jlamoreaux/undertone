@@ -7,24 +7,31 @@ import { useAllBooks, ChaptersRead } from "../hooks/useBooks";
 import { getStickyValue, setStickyValue } from "../hooks/useStickyState";
 import ModalButton from "../components/ModalButton";
 import RecordForm from "../components/RecordForm";
-import { convertFromLegacyStorage, getLastDatePlayed, setLastDatePlayed, sortNumerically } from "../utils";
+import {
+  convertFromLegacyStorage,
+  getLastDatePlayed,
+  setLastDatePlayed,
+  sortNumerically,
+} from "../utils";
 
 export type ReadingRecord = {
   [book: string]: number[];
-}
+};
 
 export type ReadingForm = {
   book: string | undefined;
   chapters: number[];
-}
+};
 
 export const sortAndRemoveDuplicateChapters = (chapters: number[]) => {
   chapters = sortNumerically(chapters);
-  const alreadySeenChapters: {[chapter: number]: boolean} = {};
+  const alreadySeenChapters: { [chapter: number]: boolean } = {};
   return chapters.filter((chapter) => {
-    return alreadySeenChapters[chapter] ? false : (alreadySeenChapters[chapter] = true);
+    return alreadySeenChapters[chapter]
+      ? false
+      : (alreadySeenChapters[chapter] = true);
   });
-}
+};
 
 export const saveChaptersRead = ({
   book,
@@ -60,14 +67,14 @@ export const recordReading = (record: ReadingForm) => {
   });
   setStickyValue(book, newBookRecord);
   setLastDatePlayed(today);
-}
+};
 
 const checkIfRecordedToday = () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const lastDatePlayed = getLastDatePlayed();
   if (!lastDatePlayed || new Date(lastDatePlayed) < today) {
-    return false
+    return false;
   }
   return true;
 };
@@ -75,7 +82,9 @@ const checkIfRecordedToday = () => {
 const Home: NextPage = () => {
   const { data: books, isError, isLoading } = useAllBooks();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isDoneRecordingToday, setIsDoneRecordingToday] = useState<boolean>(checkIfRecordedToday());
+  const [isDoneRecordingToday, setIsDoneRecordingToday] = useState<boolean>(
+    checkIfRecordedToday()
+  );
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
@@ -92,18 +101,24 @@ const Home: NextPage = () => {
     convertFromLegacyStorage();
   }
 
-
   if (isLoading) return <Loader />;
   if (!books || isError) return <span>Uh Oh! Something went wrong!</span>;
 
   return (
     <>
       <section>
-        <div style={{ textAlign: "center", display: "flex", flexDirection: "row", flexWrap: "nowrap" }}>
+        <div
+          style={{
+            textAlign: "center",
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "nowrap",
+          }}
+        >
           <span style={{ margin: "8px" }}>
-          {isDoneRecordingToday
-            ? "Great job doing your reading! Need to record more?"
-            : "Record today's Bible reading?"}
+            {isDoneRecordingToday
+              ? "Great job doing your reading! Need to record more?"
+              : "Record today's Bible reading?"}
           </span>
           <ModalButton
             buttonLabel="📖"
@@ -113,18 +128,17 @@ const Home: NextPage = () => {
             closeModal={handleModalClose}
             openModal={handleModalOpen}
           >
-            <></>
-            <RecordForm handleSubmit={handleSubmitRecord} />
+            {isModalOpen && <RecordForm handleSubmit={handleSubmitRecord} />}
           </ModalButton>
         </div>
       </section>
       <GridLayout>
         {books.map((book, i) => {
-          return <BookTile book={book} bookId={i} key={i} />;
+          return <BookTile book={book} bookId={i} key={book.name} />;
         })}
       </GridLayout>
     </>
   );
-}
+};
 
-export default Home
+export default Home;
