@@ -1,16 +1,15 @@
-import { useState } from "react"
+import { useState } from "react";
 import { useForm } from "@mantine/form";
 import { Autocomplete, Box, Button, Loader, MultiSelect } from "@mantine/core";
 import { Book, useAllBooks } from "../hooks/useBooks";
-import { ErrorMessage } from "../pages/book/[id]";
-import { ReadingForm } from "../pages";
+import { ErrorMessage } from "../archive_pages/book/[id]";
+import { ReadingForm } from "../archive_pages";
 
 type RecordFormProps = {
   handleSubmit: (record: ReadingForm) => void;
-}
+};
 
-
-const RecordForm = ({  handleSubmit }: RecordFormProps) => {
+const RecordForm = ({ handleSubmit }: RecordFormProps) => {
   const { data: books, isError, isLoading } = useAllBooks();
   const [selectedBook, setSelectedBook] = useState<Book>();
 
@@ -20,34 +19,44 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
       chapters: [],
     },
     validate: {
-      book: (value) => !value ? "Please select a book" : null,
-      chapters: (value) => (!value || value.length === 0) ? "Please select at least one chapter" : null,
+      book: (value) => (!value ? "Please select a book" : null),
+      chapters: (value) =>
+        !value || value.length === 0
+          ? "Please select at least one chapter"
+          : null,
     },
   });
 
   const handleBookChange = (bookName: string | null) => {
-    const book = books?.find(book => book.name === bookName);
+    const book = books?.find((book) => book.name === bookName);
     setSelectedBook(book);
     form.setFieldValue("book", bookName || "");
     // Reset chapters when book changes
     form.setFieldValue("chapters", []);
-  }
+  };
 
   const handleChapterChange = (chapters: string[]) => {
-    const sortedChapters = chapters ? [...chapters].sort(
-      (a: string, b: string) => Number(a) - Number(b)
-    ) : [];
+    const sortedChapters = chapters
+      ? [...chapters].sort((a: string, b: string) => Number(a) - Number(b))
+      : [];
     form.setFieldValue("chapters", sortedChapters);
-  }
+  };
 
+  const handleFormSave = ({
+    book,
+    chapters,
+  }: {
+    book: string | undefined;
+    chapters: string[];
+  }) => {
+    handleSubmit({
+      book,
+      chapters: chapters.map((chapter) => Number(chapter)),
+    });
+  };
 
-  const handleFormSave = ({ book, chapters }: {book: string | undefined, chapters: string[]}) => {
-    handleSubmit({ book, chapters: chapters.map(chapter => Number(chapter)) })
-  }
-
-
-  if (isLoading) return <Loader />
-  if (!books || isError) return <ErrorMessage />
+  if (isLoading) return <Loader />;
+  if (!books || isError) return <ErrorMessage />;
 
   const getBookChapters = (book: Book | undefined): string[] => {
     if (!book || !book.chapters) {
@@ -61,12 +70,18 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
       chapters.push(i.toString());
     }
 
-    return chapters;
-  }
+    // Filter out already selected chapters
+    const selectedChapters = form.values.chapters;
+    return chapters.filter(chapter => !selectedChapters.includes(chapter));
+  };
 
   return (
     <Box>
-      <form onSubmit={form.onSubmit((values) => handleFormSave({ book: values.book, chapters: values.chapters }))}>
+      <form
+        onSubmit={form.onSubmit((values) =>
+          handleFormSave({ book: values.book, chapters: values.chapters })
+        )}
+      >
         <Autocomplete
           data={books?.map((book) => book.name) || []}
           label="Bible Book"
@@ -80,18 +95,23 @@ const RecordForm = ({  handleSubmit }: RecordFormProps) => {
           disabled={!selectedBook}
           label="Chapters"
           placeholder={
-            selectedBook ? "Chapters" : "Chapters -- Select a book first"
+            selectedBook 
+              ? form.values.chapters.length > 0 
+                ? "Add more chapters" 
+                : "Select chapters"
+              : "Select a book first"
           }
           searchable
+          clearable
           value={form.values.chapters}
           onChange={handleChapterChange}
           error={form.errors.chapters}
+          nothingFoundMessage="All chapters selected"
         />
         <Button type="submit">Save</Button>
       </form>
     </Box>
   );
-}
+};
 
-
-export default RecordForm
+export default RecordForm;

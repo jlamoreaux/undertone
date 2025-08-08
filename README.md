@@ -1,13 +1,74 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Undertone
 
-## Getting Started
+A personal reading tracker application built with Next.js and Supabase.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+1. Node.js 16.8 or later
+2. npm
+3. Supabase account (https://supabase.com/)
+
+### Environment Setup
+
+1. Create a new file called `.env.local` in the root directory
+2. Add the following environment variables:
+
+```bash
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Database (from Supabase project settings > Database)
+POSTGRES_URL=your-database-connection-string
+```
+
+### Supabase Setup
+
+1. Create a new project in Supabase
+2. Go to Project Settings > API to find your URL and anon/public key
+3. Enable Email Auth in Authentication > Providers > Email
+4. Set up your database tables by running the Prisma migrations (see below)
+
+### Database Migrations
+
+After setting up your `.env.local` with the database connection strings, run:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+## 🛠 Development
 
 First, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 📦 Production Build
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+Then start the server with:
+
+```bash
+npm start
+```
+
+## 📚 Learn More
+
+First, run the development server:
+
+```bash
+npm run dev
 ```
 
 Open [http://localhost:8888](http://localhost:8888) with your browser to see the result.

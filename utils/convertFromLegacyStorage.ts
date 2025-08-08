@@ -1,6 +1,10 @@
 import { ChaptersRead } from "../hooks/useBooks";
-import { getStickyValue, clearStickyValues, setStickyValue } from "../hooks/useStickyState";
-import { ReadingRecord, saveChaptersRead } from "../pages";
+import {
+  getStickyValue,
+  clearStickyValues,
+  setStickyValue,
+} from "../hooks/useStickyState";
+import { ReadingRecord, saveChaptersRead } from "../archive_pages";
 
 const IS_DONE_READING_TODAY = "isDoneRecordingToday";
 
@@ -14,7 +18,6 @@ export const convertFromLegacyStorage = () => {
     booksToConvert.forEach((book) => {
       const bookRecord = getStickyValue<ChaptersRead>(book);
       if (!bookRecord) {
-
         const chaptersRead: ChaptersRead = {};
         legacyRecord[book].forEach((chapter) => {
           chaptersRead[chapter];

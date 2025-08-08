@@ -5,36 +5,36 @@ type BaseTileProps = React.DOMAttributes<HTMLDivElement> & {
   style?: CSSProperties;
 };
 
-export enum BACKGROUND_COLOR {
-  UNREAD = "var(--mantine-color-gray-6)",
-  READ = "var(--mantine-color-gray-8)",
-}
+export const BACKGROUND_COLOR = {
+  UNREAD: "var(--mantine-color-gray-5)",
+  READ: "var(--mantine-color-gray-7)",
+};
 
-export enum RECORDING_BACKGROUND_COLOR {
-  SELECTED = "var(--mantine-color-indigo-6)",
-  DESELECTED = "var(--mantine-color-indigo-2)",
-}
+export const RECORDING_BACKGROUND_COLOR = {
+  SELECTED: "var(--mantine-color-indigo-6)",
+  DESELECTED: "var(--mantine-color-indigo-2)",
+};
 
 const TILE_SIZE = "48px";
-const HOVER_SIZE = "52px";
-
 
 export const BaseTile: FC<BaseTileProps> = ({ label, style, ...attributes }) => {
   const [isHover, setIsHover] = useState<boolean>(false);
 
-  const handleMouseEnter = () => setIsHover(true); // change this to true after getting things figured out
+  const handleMouseEnter = () => setIsHover(true);
   const handleMouseLeave = () => setIsHover(false);
 
-
   const baseTileStyle: CSSProperties = {
-    width: isHover ? HOVER_SIZE : TILE_SIZE,
-    height: isHover ? HOVER_SIZE : TILE_SIZE,
+    width: TILE_SIZE,
+    height: TILE_SIZE,
     cursor: "pointer",
-    color: "#efefef",
+    color: "white",
+    fontWeight: 600,
     textAlign: "center",
-    lineHeight: isHover ? HOVER_SIZE : TILE_SIZE,
-    margin: isHover ? "-2px" : "auto",
-    // transition: "all .2s", // not sure how to get this to work without everything "jumping"
+    lineHeight: TILE_SIZE,
+    borderRadius: "4px",
+    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+    transform: isHover ? "scale(1.08)" : "scale(1)",
+    boxShadow: isHover ? "0 4px 12px rgba(0,0,0,0.15)" : "0 1px 3px rgba(0,0,0,0.1)",
   };
   return (
     <div style={{ ...baseTileStyle, ...style }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} {...attributes}>

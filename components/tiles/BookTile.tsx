@@ -22,7 +22,7 @@ export const BookTile: FC<BookTileProps> = ({ book, bookId }) => {
     };
   };
   return (
-    <Link href={`/book/${bookId}`}>
+    <Link href={`/book/${bookId}`} style={{ textDecoration: "none" }}>
       <BaseTile
         label={book.shortName}
         style={generateBookTileStyle(readPercentage)}
