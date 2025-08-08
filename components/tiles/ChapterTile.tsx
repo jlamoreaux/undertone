@@ -44,7 +44,7 @@ export const ChapterTile: FC<ChapterTileProps> = ({
     backgroundColor: isSelected
       ? RECORDING_BACKGROUND_COLOR.SELECTED
       : RECORDING_BACKGROUND_COLOR.DESELECTED,
-    color: "var(--mantine-color-dark-9)",
+    color: isSelected ? "white" : "var(--mantine-color-dark-9)",
   };
 
   const handleChapterSelectionChange = () => {
