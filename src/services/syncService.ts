@@ -1,4 +1,4 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "@/lib/supabase";
 import { ChaptersRead } from "../../hooks/useBooks";
 import { getStickyValue, setStickyValue } from "../../hooks/useStickyState";
 
@@ -9,7 +9,7 @@ interface ReadingProgressRecord {
 }
 
 export class SyncService {
-  private supabase = createClientComponentClient();
+  private supabase = supabase;
 
   /**
    * Sync local reading progress to Supabase
@@ -124,20 +124,40 @@ export class SyncService {
    * Perform a two-way sync (merge local and cloud data)
    */
   async performTwoWaySync(): Promise<void> {
-    const { data: { user } } = await this.supabase.auth.getUser();
-    if (!user) return;
+    console.log('performTwoWaySync: Starting...');
+    const { data: { user }, error: userError } = await this.supabase.auth.getUser();
+    
+    if (userError) {
+      console.error('performTwoWaySync: Error getting user:', userError);
+      throw userError;
+    }
+    
+    if (!user) {
+      console.log('performTwoWaySync: No user found, returning');
+      return;
+    }
+    
+    console.log('performTwoWaySync: User found:', user.email);
 
     try {
       // First, get cloud data
+      console.log('performTwoWaySync: Fetching cloud data...');
       const { data: cloudRecords, error: fetchError } = await this.supabase
         .from('reading_progress')
         .select('*')
         .eq('user_id', user.id);
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {
+        console.error('performTwoWaySync: Error fetching cloud data:', fetchError);
+        throw fetchError;
+      }
+      
+      console.log(`performTwoWaySync: Fetched ${cloudRecords?.length || 0} cloud records`);
 
       // Get local data
+      console.log('performTwoWaySync: Getting local data...');
       const localData = this.getAllLocalReadingProgress();
+      console.log('performTwoWaySync: Local data keys:', Object.keys(localData));
       
       // Convert cloud data to local format for comparison
       const cloudData: Record<string, ChaptersRead> = {};
@@ -160,17 +180,29 @@ export class SyncService {
         const localChapters = chapters as ChaptersRead;
         
         if (!mergedData[bookName]) {
-          mergedData[bookName] = localChapters;
+          // Convert string dates to Date objects when adding local data
+          mergedData[bookName] = {};
+          for (const [chapter, dates] of Object.entries(localChapters)) {
+            mergedData[bookName][parseInt(chapter)] = (dates as any[]).map(d => 
+              typeof d === 'string' ? new Date(d) : d
+            );
+          }
         } else {
           for (const [chapter, dates] of Object.entries(localChapters)) {
-            if (!mergedData[bookName][parseInt(chapter)]) {
-              mergedData[bookName][parseInt(chapter)] = dates;
+            const chapterNum = parseInt(chapter);
+            if (!mergedData[bookName][chapterNum]) {
+              // Convert string dates to Date objects
+              mergedData[bookName][chapterNum] = (dates as any[]).map(d => 
+                typeof d === 'string' ? new Date(d) : d
+              );
             } else {
               // Merge dates, removing duplicates
-              const existingDates = mergedData[bookName][parseInt(chapter)].map(d => d.getTime());
-              for (const date of dates) {
-                if (!existingDates.includes(date.getTime())) {
-                  mergedData[bookName][parseInt(chapter)].push(date);
+              const existingDates = mergedData[bookName][chapterNum].map(d => d.getTime());
+              for (const date of dates as any[]) {
+                // Convert string to Date if needed
+                const dateObj = typeof date === 'string' ? new Date(date) : date;
+                if (!existingDates.includes(dateObj.getTime())) {
+                  mergedData[bookName][chapterNum].push(dateObj);
                 }
               }
             }
@@ -184,10 +216,19 @@ export class SyncService {
       }
 
       // Sync merged data to cloud
+      console.log('performTwoWaySync: Syncing merged data to cloud...');
       await this.syncToCloud();
+      console.log('performTwoWaySync: Sync complete!');
       
     } catch (error) {
       console.error('Two-way sync failed:', error);
+      console.error('Error type:', typeof error);
+      console.error('Error details:', {
+        message: (error as any)?.message,
+        code: (error as any)?.code,
+        details: (error as any)?.details,
+        hint: (error as any)?.hint
+      });
       throw error;
     }
   }
@@ -201,18 +242,40 @@ export class SyncService {
     // Get all keys from localStorage
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key && !key.startsWith('supabase.') && key !== 'version' && key !== 'lastDatePlayed') {
-        const value = getStickyValue(key);
-        // Check if it's reading progress data (has chapter numbers as keys)
-        if (value && typeof value === 'object') {
-          const keys = Object.keys(value as object);
-          if (keys.length > 0 && keys.every(k => !isNaN(parseInt(k)))) {
-            result[key] = value;
+      if (key && !key.startsWith('supabase.') && key !== 'version' && key !== 'lastDatePlayed' && key !== 'theme') {
+        try {
+          const rawValue = localStorage.getItem(key);
+          if (!rawValue) continue;
+          
+          // Try to parse as JSON
+          const value = JSON.parse(rawValue);
+          
+          // Check if it's reading progress data (has chapter numbers as keys)
+          if (value && typeof value === 'object' && !Array.isArray(value)) {
+            const keys = Object.keys(value);
+            // Validate that this looks like reading progress data:
+            // - Has numeric keys (chapter numbers)
+            // - Values are arrays (dates)
+            if (keys.length > 0 && keys.every(k => !isNaN(parseInt(k)))) {
+              // Further validate that the values are arrays of dates
+              const isValidReadingData = keys.every(k => {
+                const chapterData = value[k];
+                return Array.isArray(chapterData);
+              });
+              
+              if (isValidReadingData) {
+                result[key] = value;
+              }
+            }
           }
+        } catch (e) {
+          // Not JSON or parsing error, skip this item
+          console.log(`Skipping non-JSON localStorage item: ${key}`);
         }
       }
     }
     
+    console.log('getAllLocalReadingProgress: Found reading data for books:', Object.keys(result));
     return result;
   }
 
