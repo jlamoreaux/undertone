@@ -13,11 +13,13 @@ import {
   useMantineColorScheme,
   useComputedColorScheme
 } from "@mantine/core";
-import { IconLogin, IconLogout, IconSun, IconMoon } from "@tabler/icons-react";
+import { IconLogin, IconLogout, IconSun, IconMoon, IconRefresh } from "@tabler/icons-react";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Notifications } from "@mantine/notifications";
+import { useEffect } from "react";
+import { errorMonitor } from "@/utils/errorMonitoring";
 
 // Import Mantine CSS
 import "@mantine/core/styles.css";
@@ -90,6 +92,43 @@ function Footer() {
   );
 }
 
+function SyncButton() {
+  const { performSync, syncing, user } = useAuth();
+  
+  // Debug: Log auth values in header with more detail
+  console.log('SyncButton render:', {
+    user: user ? `User: ${user.email}` : 'No user',
+    syncing,
+    hasPerformSync: !!performSync,
+    performSyncType: typeof performSync,
+    timestamp: new Date().toISOString()
+  });
+  
+  // Log when button is hidden due to no user
+  if (!user) {
+    console.log('SyncButton hidden: No user logged in');
+    return null;
+  }
+  
+  // Log when button is visible
+  console.log('SyncButton visible: User logged in, rendering button');
+  
+  return (
+    <Button
+      variant="subtle"
+      size="sm"
+      onClick={() => {
+        console.log('Sync button clicked, calling performSync');
+        performSync();
+      }}
+      loading={syncing}
+      leftSection={<IconRefresh size={16} />}
+    >
+      {syncing ? 'Syncing...' : 'Sync'}
+    </Button>
+  );
+}
+
 function LoginButton() {
   const { user, signOut } = useAuth();
   const router = useRouter();
@@ -128,6 +167,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Start error monitoring when the app loads
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      errorMonitor.start();
+      console.log('📊 Error monitoring initialized. Use window.getErrorSummary() in console to view errors.');
+    }
+  }, []);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -147,6 +194,7 @@ export default function RootLayout({
                 <Box />
                 <Group gap="sm">
                   <ColorSchemeToggle />
+                  <SyncButton />
                   <LoginButton />
                 </Group>
               </Group>

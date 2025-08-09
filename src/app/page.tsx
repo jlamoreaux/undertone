@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Loader, Text, Box } from "@mantine/core";
 import { useAllBooks, ChaptersRead } from "../../hooks/useBooks";
 import GridLayout from "../../components/Grid";
@@ -14,6 +14,7 @@ import {
   sortNumerically,
 } from "../../utils";
 import { getStickyValue, setStickyValue } from "../../hooks/useStickyState";
+import { useAuth } from "@/contexts/AuthContext";
 
 export type ReadingRecord = {
   [book: string]: number[];
@@ -68,6 +69,9 @@ export const recordReading = (record: ReadingForm) => {
   });
   setStickyValue(book, newBookRecord);
   setLastDatePlayed(today);
+  
+  // Return the book that was updated for sync tracking
+  return book;
 };
 
 const checkIfRecordedToday = () => {
@@ -82,16 +86,48 @@ const checkIfRecordedToday = () => {
 
 export default function HomePage() {
   const { data: books, isError, isLoading } = useAllBooks();
+  const { performSync, user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isDoneRecordingToday, setIsDoneRecordingToday] = useState<boolean>(
     checkIfRecordedToday()
   );
+  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [lastUpdatedBook, setLastUpdatedBook] = useState<string | null>(null);
+
+  // Effect to trigger sync after reading activity with debounce
+  useEffect(() => {
+    if (lastUpdatedBook && user) {
+      console.log(`Reading activity detected for book: ${lastUpdatedBook}, scheduling sync...`);
+      
+      // Clear any existing timeout
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+      
+      // Set a new timeout for 3 seconds
+      syncTimeoutRef.current = setTimeout(() => {
+        console.log('Triggering automatic sync after reading activity');
+        performSync();
+        setLastUpdatedBook(null);
+      }, 3000); // 3 second debounce
+    }
+    
+    // Cleanup timeout on unmount or when dependencies change
+    return () => {
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+    };
+  }, [lastUpdatedBook, user, performSync]);
 
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
 
   const handleSubmitRecord = (record: ReadingForm) => {
-    recordReading(record);
+    const updatedBook = recordReading(record);
+    if (updatedBook) {
+      setLastUpdatedBook(updatedBook);
+    }
     setIsDoneRecordingToday(true);
     handleModalClose();
   };
