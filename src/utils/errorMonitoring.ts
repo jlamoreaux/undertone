@@ -12,14 +12,22 @@ interface ErrorLog {
 class ErrorMonitor {
   private errors: ErrorLog[] = [];
   private originalConsoleError: typeof console.error;
-  private originalFetch: typeof fetch;
+  private originalFetch: typeof fetch | undefined;
 
   constructor() {
     this.originalConsoleError = console.error;
-    this.originalFetch = window.fetch;
+    // Only access window.fetch in browser environment
+    if (typeof window !== 'undefined') {
+      this.originalFetch = window.fetch;
+    }
   }
 
   start() {
+    // Only run in browser environment
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     // Intercept console.error
     console.error = (...args) => {
       const error = args[0];
@@ -62,52 +70,54 @@ class ErrorMonitor {
     });
 
     // Intercept fetch to monitor network errors
-    window.fetch = async (...args) => {
-      const [url, options] = args;
-      const urlString = typeof url === 'string' ? url : url.toString();
-      
-      try {
-        const response = await this.originalFetch.apply(window, args);
+    if (this.originalFetch) {
+      window.fetch = async (...args) => {
+        const [url, options] = args;
+        const urlString = typeof url === 'string' ? url : url.toString();
         
-        // Check for Supabase-related requests
-        if (urlString.includes('supabase.co')) {
-          // Check for CORS or auth errors
-          if (response.status === 401 || response.status === 403) {
+        try {
+          const response = await this.originalFetch!.apply(window, args);
+          
+          // Check for Supabase-related requests
+          if (urlString.includes('supabase.co')) {
+            // Check for CORS or auth errors
+            if (response.status === 401 || response.status === 403) {
+              const errorLog: ErrorLog = {
+                timestamp: new Date().toISOString(),
+                type: 'network-error',
+                message: `Auth error on Supabase request: ${response.status} ${response.statusText}`,
+                url: urlString,
+                status: response.status
+              };
+              console.warn(`🚨 SUPABASE ${response.status} ERROR:`, errorLog);
+              this.errors.push(errorLog);
+            }
+            
+            // Log successful Supabase requests for debugging
+            if (response.ok) {
+              console.log(`✅ Supabase request successful: ${urlString}`);
+            }
+          }
+          
+          return response;
+        } catch (error) {
+          // Check if it's a CORS error
+          if (urlString.includes('supabase.co')) {
             const errorLog: ErrorLog = {
               timestamp: new Date().toISOString(),
               type: 'network-error',
-              message: `Auth error on Supabase request: ${response.status} ${response.statusText}`,
+              message: `Network/CORS error on Supabase request: ${error}`,
               url: urlString,
-              status: response.status
+              stack: (error as Error)?.stack,
+              details: error
             };
-            console.warn(`🚨 SUPABASE ${response.status} ERROR:`, errorLog);
+            console.warn('🚨 SUPABASE NETWORK/CORS ERROR:', errorLog);
             this.errors.push(errorLog);
           }
-          
-          // Log successful Supabase requests for debugging
-          if (response.ok) {
-            console.log(`✅ Supabase request successful: ${urlString}`);
-          }
+          throw error;
         }
-        
-        return response;
-      } catch (error) {
-        // Check if it's a CORS error
-        if (urlString.includes('supabase.co')) {
-          const errorLog: ErrorLog = {
-            timestamp: new Date().toISOString(),
-            type: 'network-error',
-            message: `Network/CORS error on Supabase request: ${error}`,
-            url: urlString,
-            stack: (error as Error)?.stack,
-            details: error
-          };
-          console.warn('🚨 SUPABASE NETWORK/CORS ERROR:', errorLog);
-          this.errors.push(errorLog);
-        }
-        throw error;
-      }
-    };
+      };
+    }
 
     console.log('🔍 Error monitoring started. Watching for Supabase, React Context, and network errors...');
   }

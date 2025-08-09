@@ -19,7 +19,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Notifications } from "@mantine/notifications";
 import { useEffect } from "react";
-import { errorMonitor } from "@/utils/errorMonitoring";
 
 // Import Mantine CSS
 import "@mantine/core/styles.css";
@@ -170,8 +169,11 @@ export default function RootLayout({
   // Start error monitoring when the app loads
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      errorMonitor.start();
-      console.log('📊 Error monitoring initialized. Use window.getErrorSummary() in console to view errors.');
+      // Dynamically import error monitoring to avoid SSR issues
+      import('@/utils/errorMonitoring').then(({ errorMonitor }) => {
+        errorMonitor.start();
+        console.log('📊 Error monitoring initialized. Use window.getErrorSummary() in console to view errors.');
+      });
     }
   }, []);
 
