@@ -7,8 +7,9 @@ import { ChapterTile } from "../../../../components/tiles/ChapterTile";
 import { useBook } from "../../../../hooks/useBooks";
 import Link from "next/link";
 import { IconArrowLeft, IconCheck, IconX } from "@tabler/icons-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { recordReading } from "../../page";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const ErrorMessage = () => <div>Uh oh! Something went wrong!</div>;
 
@@ -86,8 +87,37 @@ export default function BookPage() {
   );
   const params = useParams();
   const id = params.id as string;
+  const { performSync, user } = useAuth();
+  const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [lastUpdatedBook, setLastUpdatedBook] = useState<string | null>(null);
 
   const { data, isError, isLoading } = useBook(id);
+
+  // Effect to trigger sync after reading activity with debounce
+  useEffect(() => {
+    if (lastUpdatedBook && user) {
+      console.log(`Reading activity detected for book: ${lastUpdatedBook}, scheduling sync...`);
+      
+      // Clear any existing timeout
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+      
+      // Set a new timeout for 3 seconds
+      syncTimeoutRef.current = setTimeout(() => {
+        console.log('Triggering automatic sync after reading activity');
+        performSync();
+        setLastUpdatedBook(null);
+      }, 3000); // 3 second debounce
+    }
+    
+    // Cleanup timeout on unmount or when dependencies change
+    return () => {
+      if (syncTimeoutRef.current) {
+        clearTimeout(syncTimeoutRef.current);
+      }
+    };
+  }, [lastUpdatedBook, user, performSync]);
 
   const beginRecording = () => {
     setIsRecording(true);
@@ -106,7 +136,10 @@ export default function BookPage() {
       const chapter = Number(key);
       if (chapterSelection[chapter] === true) chapters.push(chapter);
     });
-    recordReading({ book: name, chapters });
+    const updatedBook = recordReading({ book: name, chapters });
+    if (updatedBook) {
+      setLastUpdatedBook(updatedBook);
+    }
     setIsRecording(false);
   };
   const toggleTileSelected = (chapter: number) => {
