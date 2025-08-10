@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { Loader, Center } from '@mantine/core';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { Loader, Center } from "@mantine/core";
 
 type ProtectedRouteProps = {
   children: React.ReactNode;
   redirectTo?: string;
 };
 
-export default function ProtectedRoute({ 
-  children, 
-  redirectTo = '/login' 
+export default function ProtectedRoute({
+  children,
+  redirectTo = "/login"
 }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -25,7 +25,7 @@ export default function ProtectedRoute({
 
   if (loading) {
     return (
-      <Center style={{ height: '100vh' }}>
+      <Center style={{ height: "100vh" }}>
         <Loader size="xl" />
       </Center>
     );
@@ -33,7 +33,7 @@ export default function ProtectedRoute({
 
   if (!user) {
     return (
-      <Center style={{ height: '100vh' }}>
+      <Center style={{ height: "100vh" }}>
         <Loader size="xl" />
       </Center>
     );

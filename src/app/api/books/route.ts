@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const jsonDirectory = path.join(process.cwd(), "json");
     const fileContents = await fs.readFile(jsonDirectory + "/books.json", "utf8");
-    
+
     const searchParams = request.nextUrl.searchParams;
     const id = searchParams.get("id");
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Book not found" }, { status: 404 });
     }
   } catch (error) {
-    console.error("Error reading books:", error);
+
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

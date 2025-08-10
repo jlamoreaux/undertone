@@ -69,7 +69,7 @@ export const recordReading = (record: ReadingForm) => {
   });
   setStickyValue(book, newBookRecord);
   setLastDatePlayed(today);
-  
+
   // Return the book that was updated for sync tracking
   return book;
 };
@@ -97,21 +97,20 @@ export default function HomePage() {
   // Effect to trigger sync after reading activity with debounce
   useEffect(() => {
     if (lastUpdatedBook && user) {
-      console.log(`Reading activity detected for book: ${lastUpdatedBook}, scheduling sync...`);
-      
+
       // Clear any existing timeout
       if (syncTimeoutRef.current) {
         clearTimeout(syncTimeoutRef.current);
       }
-      
+
       // Set a new timeout for 3 seconds
       syncTimeoutRef.current = setTimeout(() => {
-        console.log('Triggering automatic sync after reading activity');
+
         performSync();
         setLastUpdatedBook(null);
       }, 3000); // 3 second debounce
     }
-    
+
     // Cleanup timeout on unmount or when dependencies change
     return () => {
       if (syncTimeoutRef.current) {

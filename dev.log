@@ -1,0 +1,67 @@
+
+> undrtone@0.1.0 dev
+> next dev --turbopack -p 8888
+
+   ▲ Next.js 15.4.6 (Turbopack)
+   - Local:        http://localhost:8888
+   - Network:      http://192.168.5.194:8888
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Compiled middleware in 360ms
+ ✓ Ready in 1779ms
+ ○ Compiling /test-sync ...
+This test needs to be run in a browser environment.
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ GET /test-sync 200 in 5084ms
+ ✓ Compiled /test-sync in 5.2s
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ GET / 200 in 2642ms
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ GET / 200 in 75ms
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ HEAD / 200 in 63ms
+This test needs to be run in a browser environment.
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ GET /test-sync 200 in 432ms
+ ✓ Compiled in 239ms
+ GET /test-sync 200 in 165ms
+This test needs to be run in a browser environment.
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ ✓ Compiled in 0ms
+ GET /test-sync 200 in 102ms
+ ✓ Compiled in 35ms
+ ✓ Compiled in 7ms
+ ✓ Compiled in 12ms
+This test needs to be run in a browser environment.
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ GET /test-sync 200 in 340ms
+ ✓ Compiled in 94ms
+ ✓ Compiled in 13ms
+This test needs to be run in a browser environment.
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ GET /test-sync 200 in 394ms
+AuthProvider mounted
+AuthProvider render, user: null loading: true
+performSync in context true
+ GET /test-sync 200 in 130ms
+ ✓ Compiled in 997ms

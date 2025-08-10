@@ -4,7 +4,6 @@ import {
   Avatar,
   Menu,
   Text,
-  Button,
   Group,
   UnstyledButton,
   Box,
@@ -18,7 +17,6 @@ export function UserProfile() {
   if (!user) return null;
 
   const userInitial = user.email?.charAt(0).toUpperCase() || "U";
-  const userEmail = user.email || "user@example.com";
 
   return (
     <Menu shadow="md" width={200} position="bottom-end">

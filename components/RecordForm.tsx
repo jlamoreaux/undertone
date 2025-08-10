@@ -95,9 +95,9 @@ const RecordForm = ({ handleSubmit }: RecordFormProps) => {
           disabled={!selectedBook}
           label="Chapters"
           placeholder={
-            selectedBook 
-              ? form.values.chapters.length > 0 
-                ? "Add more chapters" 
+            selectedBook
+              ? form.values.chapters.length > 0
+                ? "Add more chapters"
                 : "Select chapters"
               : "Select a book first"
           }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Loader, ActionIcon, Title, Group } from "@mantine/core";
 import GridLayout from "../../../../components/Grid";
 import { ChapterTile } from "../../../../components/tiles/ChapterTile";
@@ -31,17 +31,17 @@ const BookPageHeader = ({
   saveRecording,
 }: BookPageHeaderProps) => {
   return (
-    <div style={{ 
-      display: "flex", 
-      flexDirection: "row", 
+    <div style={{
+      display: "flex",
+      flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
       marginBottom: "24px"
     }}>
       <Group gap="sm">
         <Link href="/">
-          <ActionIcon 
-            title="Go Back" 
+          <ActionIcon
+            title="Go Back"
             aria-label="Go Back"
             variant="subtle"
             size="lg"
@@ -96,21 +96,20 @@ export default function BookPage() {
   // Effect to trigger sync after reading activity with debounce
   useEffect(() => {
     if (lastUpdatedBook && user) {
-      console.log(`Reading activity detected for book: ${lastUpdatedBook}, scheduling sync...`);
-      
+
       // Clear any existing timeout
       if (syncTimeoutRef.current) {
         clearTimeout(syncTimeoutRef.current);
       }
-      
+
       // Set a new timeout for 3 seconds
       syncTimeoutRef.current = setTimeout(() => {
-        console.log('Triggering automatic sync after reading activity');
+
         performSync();
         setLastUpdatedBook(null);
       }, 3000); // 3 second debounce
     }
-    
+
     // Cleanup timeout on unmount or when dependencies change
     return () => {
       if (syncTimeoutRef.current) {

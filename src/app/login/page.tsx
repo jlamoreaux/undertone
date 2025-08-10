@@ -1,54 +1,51 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { 
-  TextInput, 
-  Button, 
-  Title, 
-  Text, 
-  Container, 
-  Alert, 
-  Box, 
-  Divider, 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  Button,
+  Title,
+  Text,
+  Container,
+  Alert,
+  Box,
+  Divider,
   Stack,
   Card,
-  rem,
-  Input,
-  InputBase
-} from '@mantine/core';
-import { 
-  IconMail, 
+  Input
+} from "@mantine/core";
+import {
+  IconMail,
   IconArrowRight,
   IconDeviceFloppy
-} from '@tabler/icons-react';
+} from "@tabler/icons-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; content: string } | null>(null);
+  const [message, setMessage] = useState<{ type: "success" | "error"; content: string } | null>(null);
   const { signIn } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setLoading(true);
     setMessage(null);
 
     const { error } = await signIn(email);
-    
+
     if (error) {
-      setMessage({ type: 'error', content: error.message });
+      setMessage({ type: "error", content: error.message });
     } else {
       setMessage({
-        type: 'success',
-        content: 'Check your email for the magic link to log in!',
+        type: "success",
+        content: "Check your email for the magic link to log in!",
       });
     }
-    
+
     setLoading(false);
   };
 
@@ -68,10 +65,10 @@ export default function LoginPage() {
           <Title order={3} mb="md" ta="center">
             Sign in to sync your data
           </Title>
-          
+
           {message && (
             <Alert
-              color={message.type === 'success' ? 'green' : 'red'}
+              color={message.type === "success" ? "green" : "red"}
               mb="md"
               onClose={() => setMessage(null)}
               withCloseButton
@@ -79,7 +76,7 @@ export default function LoginPage() {
               {message.content}
             </Alert>
           )}
-          
+
           <form onSubmit={handleSubmit}>
             <Stack>
               <Input.Wrapper label="Email address" required>
@@ -94,7 +91,7 @@ export default function LoginPage() {
                   size="md"
                 />
               </Input.Wrapper>
-              
+
               <Button
                 type="submit"
                 size="md"
@@ -118,7 +115,7 @@ export default function LoginPage() {
             <Button
               variant="default"
               leftSection={<IconDeviceFloppy size={18} />}
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               fullWidth
               size="md"
               radius="md"
