@@ -99,7 +99,7 @@ class ErrorMonitor {
 
             // Log successful Supabase requests for debugging
             if (response.ok) {
-
+              console.debug(`Supabase request successful: ${urlString}`);
             }
           }
 

@@ -4,7 +4,7 @@ import {
   clearStickyValues,
   setStickyValue,
 } from "../hooks/useStickyState";
-import { ReadingRecord, saveChaptersRead } from "../archive_pages";
+import { ReadingRecord, saveChaptersRead } from "../src/utils/readingUtils";
 
 const IS_DONE_READING_TODAY = "isDoneRecordingToday";
 

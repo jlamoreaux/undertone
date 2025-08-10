@@ -8,10 +8,10 @@ import { useBook } from "../../../../hooks/useBooks";
 import Link from "next/link";
 import { IconArrowLeft, IconCheck, IconX } from "@tabler/icons-react";
 import { useState, useEffect, useRef } from "react";
-import { recordReading } from "../../page";
+import { recordReading } from "@/utils/readingUtils";
 import { useAuth } from "@/contexts/AuthContext";
 
-export const ErrorMessage = () => <div>Uh oh! Something went wrong!</div>;
+const ErrorMessage = () => <div>Uh oh! Something went wrong!</div>;
 
 interface BookPageHeaderProps {
   pageTitle: string;

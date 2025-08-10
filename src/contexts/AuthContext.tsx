@@ -1,6 +1,15 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode, useRef, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -29,7 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const router = useRouter();
-  const syncService = new SyncService();
+  const syncService = useMemo(() => new SyncService(), []);
   const userRef = useRef<User | null>(null);
   const syncingRef = useRef(false);
 
@@ -45,7 +54,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const currentSyncing = syncingRef.current;
 
     if (currentSyncing || !currentUser) {
-
       return;
     }
 
@@ -60,7 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         color: "green",
       });
     } catch (error) {
-
       notifications.show({
         title: "Sync Failed",
         message: "Could not sync your reading progress. Will retry later.",
@@ -74,30 +81,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check active sessions and set the user
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
 
-        setUser(session?.user ?? null);
-        setLoading(false);
-
-        // Sync when user signs in
-        if (event === "SIGNED_IN" && session?.user) {
-
-          setTimeout(() => performSync(), 1000); // Small delay to ensure user state is set
-        }
+      // Sync when user signs in
+      if (event === "SIGNED_IN" && session?.user) {
+        setTimeout(() => performSync(), 1000); // Small delay to ensure user state is set
       }
-    );
+    });
 
     // Get the current session
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
       setUser(session?.user ?? null);
       setLoading(false);
 
       // Sync if user is already logged in
       if (session?.user) {
-
         setTimeout(() => performSync(), 1000);
       }
     };
@@ -110,7 +116,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [performSync]);
 
   // Sign in with magic link
-  const signIn = async (email: string): Promise<{ error: AuthError | null }> => {
+  const signIn = async (
+    email: string
+  ): Promise<{ error: AuthError | null }> => {
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {

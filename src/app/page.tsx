@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Loader, Text, Box } from "@mantine/core";
-import { useAllBooks, ChaptersRead } from "../../hooks/useBooks";
+import { useAllBooks } from "../../hooks/useBooks";
 import GridLayout from "../../components/Grid";
 import { BookTile } from "../../components/tiles/BookTile";
 import ModalButton from "../../components/ModalButton";
@@ -10,69 +10,10 @@ import RecordForm from "../../components/RecordForm";
 import {
   convertFromLegacyStorage,
   getLastDatePlayed,
-  setLastDatePlayed,
-  sortNumerically,
 } from "../../utils";
-import { getStickyValue, setStickyValue } from "../../hooks/useStickyState";
+import { getStickyValue } from "../../hooks/useStickyState";
 import { useAuth } from "@/contexts/AuthContext";
-
-export type ReadingRecord = {
-  [book: string]: number[];
-};
-
-export type ReadingForm = {
-  book: string | undefined;
-  chapters: number[];
-};
-
-export const sortAndRemoveDuplicateChapters = (chapters: number[]) => {
-  chapters = sortNumerically(chapters);
-  const alreadySeenChapters: { [chapter: number]: boolean } = {};
-  return chapters.filter((chapter) => {
-    return alreadySeenChapters[chapter]
-      ? false
-      : (alreadySeenChapters[chapter] = true);
-  });
-};
-
-export const saveChaptersRead = ({
-  book,
-  chaptersRead,
-}: {
-  book: string;
-  chaptersRead: ChaptersRead;
-}) => {
-  setStickyValue<ChaptersRead>(book, chaptersRead);
-};
-
-export const recordReading = (record: ReadingForm) => {
-  const { book, chapters } = record;
-  if (!book) {
-    return;
-  }
-
-  const currentBookRecord = getStickyValue<ChaptersRead>(book);
-  const newBookRecord: ChaptersRead = currentBookRecord || {};
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  chapters.forEach((chapter) => {
-    if (currentBookRecord && currentBookRecord[chapter]) {
-      if (currentBookRecord[chapter].indexOf(today) !== -1) {
-        newBookRecord[chapter].push(today);
-      }
-      return;
-    } else {
-      newBookRecord[chapter] = [today];
-    }
-  });
-  setStickyValue(book, newBookRecord);
-  setLastDatePlayed(today);
-
-  // Return the book that was updated for sync tracking
-  return book;
-};
+import { ReadingForm, recordReading } from "@/utils/readingUtils";
 
 const checkIfRecordedToday = () => {
   const today = new Date();

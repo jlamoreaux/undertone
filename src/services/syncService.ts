@@ -39,53 +39,48 @@ export class SyncService {
     const { data: { user } } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    try {
-      // Get all local storage data
-      const localData = this.getAllLocalReadingProgress();
+    // Get all local storage data
+    const localData = this.getAllLocalReadingProgress();
 
-      // Convert to database format
-      const records: ReadingProgressRecord[] = [];
+    // Convert to database format
+    const records: ReadingProgressRecord[] = [];
 
-      for (const [bookName, chapters] of Object.entries(localData)) {
-        const chaptersRead = chapters as ChaptersRead;
-        for (const [chapter, dates] of Object.entries(chaptersRead)) {
-          for (const date of dates) {
-            records.push({
-              book_name: bookName,
-              chapter: parseInt(chapter),
-              read_date: new Date(date).toISOString().split("T")[0]
-            });
-          }
+    for (const [bookName, chapters] of Object.entries(localData)) {
+      const chaptersRead = chapters as ChaptersRead;
+      for (const [chapter, dates] of Object.entries(chaptersRead)) {
+        for (const date of dates) {
+          records.push({
+            book_name: bookName,
+            chapter: parseInt(chapter),
+            read_date: new Date(date).toISOString().split("T")[0]
+          });
         }
       }
-
-      // Batch upsert to Supabase
-      if (records.length > 0) {
-        const { error } = await this.supabase
-          .from("reading_progress")
-          .upsert(
-            records.map(record => ({
-              user_id: user.id,
-              ...record
-            })),
-            {
-              onConflict: "user_id,book_name,chapter,read_date",
-              ignoreDuplicates: true
-            }
-          );
-
-        if (error) {
-
-          throw error;
-        }
-      }
-
-      // Update last sync time
-      await this.updateLastSyncTime();
-    } catch (error) {
-
-      throw error;
     }
+
+    // Batch upsert to Supabase
+    if (records.length > 0) {
+      const { error } = await this.supabase
+        .from("reading_progress")
+        .upsert(
+          records.map(record => ({
+            user_id: user.id,
+            ...record
+          })),
+          {
+            onConflict: "user_id,book_name,chapter,read_date",
+            ignoreDuplicates: true
+          }
+        );
+
+      if (error) {
+        console.error("Failed to sync to cloud:", error);
+        throw error;
+      }
+    }
+
+    // Update last sync time
+    await this.updateLastSyncTime();
   }
 
   /**
@@ -95,50 +90,45 @@ export class SyncService {
     const { data: { user } } = await this.supabase.auth.getUser();
     if (!user) return;
 
-    try {
-      // Get all reading progress from Supabase
-      const { data: records, error } = await this.supabase
-        .from("reading_progress")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("book_name")
-        .order("chapter")
-        .order("read_date") as { data: SupabaseReadingRow[] | null; error: Error | null };
+    // Get all reading progress from Supabase
+    const { data: records, error } = await this.supabase
+      .from("reading_progress")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("book_name")
+      .order("chapter")
+      .order("read_date") as { data: SupabaseReadingRow[] | null; error: Error | null };
 
-      if (error) {
-
-        throw error;
-      }
-
-      if (!records || records.length === 0) return;
-
-      // Group by book
-      const bookData: LocalReadingData = {};
-
-      for (const record of records) {
-        if (!bookData[record.book_name]) {
-          bookData[record.book_name] = {};
-        }
-
-        if (!bookData[record.book_name][record.chapter]) {
-          bookData[record.book_name][record.chapter] = [];
-        }
-
-        const readDate = new Date(record.read_date);
-        bookData[record.book_name][record.chapter].push(readDate);
-      }
-
-      // Save to local storage
-      for (const [bookName, chapters] of Object.entries(bookData)) {
-        setStickyValue<ChaptersRead>(bookName, chapters);
-      }
-
-      // Update last sync time
-      await this.updateLastSyncTime();
-    } catch (error) {
-
+    if (error) {
+      console.error("Failed to sync from cloud:", error);
       throw error;
     }
+
+    if (!records || records.length === 0) return;
+
+    // Group by book
+    const bookData: LocalReadingData = {};
+
+    for (const record of records) {
+      if (!bookData[record.book_name]) {
+        bookData[record.book_name] = {};
+      }
+
+      if (!bookData[record.book_name][record.chapter]) {
+        bookData[record.book_name][record.chapter] = [];
+      }
+
+      const readDate = new Date(record.read_date);
+      bookData[record.book_name][record.chapter].push(readDate);
+    }
+
+    // Save to local storage
+    for (const [bookName, chapters] of Object.entries(bookData)) {
+      setStickyValue<ChaptersRead>(bookName, chapters);
+    }
+
+    // Update last sync time
+    await this.updateLastSyncTime();
   }
 
   /**
@@ -236,11 +226,11 @@ export class SyncService {
       await this.syncToCloud();
 
     } catch (error) {
-
+      console.error("Two-way sync failed:", error);
       if (error instanceof Error) {
-
+        console.error("Error message:", error.message);
       } else {
-
+        console.error("Unknown error type:", error);
       }
       throw error;
     }
@@ -283,7 +273,7 @@ export class SyncService {
           }
         } catch (e) {
           // Not JSON or parsing error, skip this item
-
+          console.debug("Skipping non-JSON item:", key, e);
         }
       }
     }
@@ -315,7 +305,7 @@ export class SyncService {
       });
 
     if (error) {
-
+      console.error("Failed to update last sync time:", error);
     }
   }
 
